@@ -14,10 +14,10 @@ public final class ActivationService {
 
     // Проверка на активацию лицензии
     public static boolean checkActivationLicense() {
-        if (getKeyFromFile() == null) return false; // Если не получилось получить ключ
+        if (FileService.getKeyFromFile() == null) return false; // Если не получилось получить ключ
 
         // Сравнивает существующий ключ в файле с ключом активации для данного устройства
-        return getKeyFromFile().equals(getKeyForDevice());
+        return FileService.getKeyFromFile().equals(getKeyForDevice());
     }
 
     // Проверка на соответсвие введеного ключа лицензионному
@@ -33,23 +33,6 @@ public final class ActivationService {
 
         // Объединяется ключ и серийный номер диска и хэшируется
         return HashingUtil.hash256(diskSerialNumber + KEY_LICENSE_SHA_256);
-    }
-
-    // Метод для получения ключа из файла
-    public static String getKeyFromFile() {
-        File reFile = new File("license.bin"); // Файл с активированной лицензией
-        String keyFile = null; // Ключ из файла
-
-        try(BufferedReader reader = new BufferedReader(new FileReader(reFile))) {
-            keyFile = reader.readLine();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Файл не найден");
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла!");
-        }
-
-        return keyFile;
     }
 
     // Метод выдает серийный номер диска
