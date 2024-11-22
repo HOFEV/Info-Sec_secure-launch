@@ -20,6 +20,11 @@ public final class ActivationService {
         return getKeyFromFile().equals(getKeyForDevice());
     }
 
+    // Проверка на соответсвие введеного ключа лицензионному
+    public static boolean isLicenseKeyValid(String enteredKey) {
+        return HashingUtil.hash256(enteredKey).equals(KEY_LICENSE_SHA_256);
+    }
+
     // Метод создает уникальный ключ для этого устройства
     private static String getKeyForDevice() {
 

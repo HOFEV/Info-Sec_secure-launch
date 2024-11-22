@@ -19,7 +19,20 @@ public class MainController {
         if (!ActivationService.checkActivationLicense()) {
             ActivationForm.showLoginForm();
         }
-        // Создание поле ввода
-        //ActivationForm.showLoginForm();
+    }
+
+    // Активация приложения
+    public boolean activatingApplication(String enteredKey) {
+
+        // Проверка на совпадение ключа
+        if (ActivationService.isLicenseKeyValid(enteredKey)) {
+            // Создание/редактирование папки и добавления в него ключа
+            // Вход в систему
+            return true;
+        } else {
+            // Вывод ошибки: неверный ключ
+            return false;
+        }
+
     }
 }

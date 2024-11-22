@@ -1,5 +1,7 @@
 package com.hofev.securelaunch.modules.activation;
 
+import com.hofev.securelaunch.controllers.MainController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -157,9 +159,12 @@ public class ActivationForm {
                     return;
                 }
                 // Собираем ключ активации из всех частей
-                String key = part1.getText() + "-" + part2.getText() + "-" + part3.getText() + "-" + part4.getText();
-                // Здесь можно добавить логику проверки ключа активации
-                JOptionPane.showMessageDialog(frame, "Ключ введён: " + key);
+                String enteredKey = part1.getText() + part2.getText() + part3.getText() + part4.getText();
+
+                if (!(MainController.getInstance().activatingApplication(enteredKey))) {
+                    JOptionPane.showMessageDialog(frame, "Ошибка: неверный ключ!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         });
 
