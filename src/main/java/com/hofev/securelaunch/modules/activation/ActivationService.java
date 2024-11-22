@@ -2,12 +2,10 @@ package com.hofev.securelaunch.modules.activation;
 
 // Реализует логику 1 лр
 
+import com.hofev.securelaunch.services.FileService;
+
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public final class ActivationService {
     private static final String KEY_LICENSE_SHA_256 = "843f6eb0d196bac28f2106a9d0f8441f9518d6955d468424926063aeea9b59a4";

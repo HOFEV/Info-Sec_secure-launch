@@ -1,4 +1,4 @@
-package com.hofev.securelaunch.modules.activation;
+package com.hofev.securelaunch.services;
 
 import java.io.*;
 

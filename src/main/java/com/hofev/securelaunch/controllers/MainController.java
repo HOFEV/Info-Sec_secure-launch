@@ -2,7 +2,7 @@ package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.modules.activation.ActivationForm;
 import com.hofev.securelaunch.modules.activation.ActivationService;
-import com.hofev.securelaunch.modules.activation.FileService;
+import com.hofev.securelaunch.services.FileService;
 
 import javax.swing.*;
 
