@@ -26,7 +26,7 @@ public final class ActivationService {
     }
 
     // Метод создает уникальный ключ для этого устройства
-    private static String getKeyForDevice() {
+    public static String getKeyForDevice() {
 
         // Получаем серийный номер компютера
         String diskSerialNumber = getDiskSerialNumber();
@@ -36,7 +36,7 @@ public final class ActivationService {
     }
 
     // Метод выдает серийный номер диска
-    public static String getDiskSerialNumber() {
+    private static String getDiskSerialNumber() {
         try {
             Process process = Runtime.getRuntime().exec("wmic diskDrive get serialNumber");
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
