@@ -2,6 +2,9 @@ package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.modules.activation.ActivationForm;
 import com.hofev.securelaunch.modules.activation.ActivationService;
+import com.hofev.securelaunch.modules.activation.FileService;
+
+import javax.swing.*;
 
 public class MainController {
 
@@ -22,12 +25,18 @@ public class MainController {
     }
 
     // Активация приложения
-    public boolean activatingApplication(String enteredKey) {
+    public boolean activatingApplication(String enteredKey, JFrame frame) {
 
         // Проверка на совпадение ключа
         if (ActivationService.isLicenseKeyValid(enteredKey)) {
+
             // Создание/редактирование папки и добавления в него ключа
+            FileService.putKeyToFile(ActivationService.getKeyForDevice());
+            frame.dispose(); // Закрытие окна после успешной активации
+
             // Вход в систему
+            UserController.getInstance().startLoginModule();
+
             return true;
         } else {
             // Вывод ошибки: неверный ключ

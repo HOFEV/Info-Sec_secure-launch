@@ -161,7 +161,7 @@ public class ActivationForm {
                 // Собираем ключ активации из всех частей
                 String enteredKey = part1.getText() + part2.getText() + part3.getText() + part4.getText();
 
-                if (!(MainController.getInstance().activatingApplication(enteredKey))) {
+                if (!(MainController.getInstance().activatingApplication(enteredKey, frame))) {
                     JOptionPane.showMessageDialog(frame, "Ошибка: неверный ключ!", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
