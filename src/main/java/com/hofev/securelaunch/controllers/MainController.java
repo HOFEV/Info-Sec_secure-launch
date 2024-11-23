@@ -22,6 +22,9 @@ public class MainController {
         if (!ActivationService.checkActivationLicense()) {
             ActivationForm.showActivationForm();
         }
+
+        // Если приложение активировано, запускается инициализаци пользователя
+        UserController.getInstance().startLoginUser();
     }
 
     // Активация приложения
@@ -35,7 +38,7 @@ public class MainController {
             frame.dispose(); // Закрытие окна после успешной активации
 
             // Вход в систему
-            UserController.getInstance().startLoginModule();
+            UserController.getInstance().startLoginUser();
 
             return true;
         } else {

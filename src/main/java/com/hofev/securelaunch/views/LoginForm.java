@@ -1,20 +1,24 @@
 package com.hofev.securelaunch.views;
 
+import com.hofev.securelaunch.controllers.UserController;
+
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginForm {
-    public static void main(String[] args) {
-        // Запуск GUI в потоке Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(LoginForm::showLoginForm);
+    private JFrame frame;
+    private JTextField loginField;
+    private JPasswordField passwordField;
+
+    public LoginForm() {
+        createAndShowGUI();
     }
 
-    private static void showLoginForm() {
+    private void createAndShowGUI() {
         // Создание основного окна
-        JFrame frame = new JFrame("Login Form");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame = new JFrame("Вход");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false); // Запрещаем изменять размер окна
@@ -41,7 +45,8 @@ public class LoginForm {
         gbc.gridy = 0;
         loginPanel.add(loginLabel, gbc);
 
-        JTextField loginField = new JTextField(15);
+        loginField = new JTextField("example@mail.com", 15); // Заполнение типовым значением
+        limitTextField(loginField, "[a-zA-Z0-9@._-]*"); // Ограничение: только разрешённые символы
         gbc.gridx = 1;
         gbc.gridy = 0;
         loginPanel.add(loginField, gbc);
@@ -52,7 +57,7 @@ public class LoginForm {
         gbc.gridy = 1;
         loginPanel.add(passwordLabel, gbc);
 
-        JPasswordField passwordField = new JPasswordField(15);
+        passwordField = new JPasswordField(15); // Оставляем пустым
         gbc.gridx = 1;
         gbc.gridy = 1;
         loginPanel.add(passwordField, gbc);
@@ -72,34 +77,52 @@ public class LoginForm {
         mainPanel.add(registerButton, BorderLayout.SOUTH);
 
         // Обработчик событий для кнопки "Войти"
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = loginField.getText();
-                String password = new String(passwordField.getPassword());
+        loginButton.addActionListener(e -> {
+            String username = loginField.getText();
+            String password = new String(passwordField.getPassword());
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, "Введите логин и пароль!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                    return;
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Добро пожаловать, " + username + "!", "Успешный вход", JOptionPane.INFORMATION_MESSAGE);
-                }
-
-
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Введите логин и пароль!", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else {
+                JOptionPane.showMessageDialog(frame, "Добро пожаловать, " + username + "!", "Успешный вход", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
         // Обработчик событий для кнопки "Регистрация"
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Переход на форму регистрации...", "Регистрация", JOptionPane.INFORMATION_MESSAGE);
-            }
+        registerButton.addActionListener(e -> {
+            //JOptionPane.showMessageDialog(frame, "Переход на форму регистрации...", "Регистрация", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            UserController.getInstance().startRegistration(); // Переход на регистрацию
         });
 
         // Отображение окна
         frame.setVisible(true);
     }
+
+    private static void limitTextField(JTextField textField, String regex) {
+        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text.matches(regex)) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
+                if (text.matches(regex)) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+        });
+    }
+
+    public void show() {
+        frame.setVisible(true);
+    }
+
+    public void dispose() {
+        frame.dispose();
+    }
 }
-
-

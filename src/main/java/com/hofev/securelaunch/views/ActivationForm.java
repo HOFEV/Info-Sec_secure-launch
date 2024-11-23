@@ -18,7 +18,7 @@ public class ActivationForm {
 
     // Класс для ограничения количества символов в текстовом поле
     static class LimitDocument extends PlainDocument {
-        private int limit;
+        private final int limit;
 
         LimitDocument(int limit) {
             this.limit = limit;
