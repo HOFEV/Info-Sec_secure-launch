@@ -1,6 +1,6 @@
 package com.hofev.securelaunch.controllers;
 
-import com.hofev.securelaunch.modules.activation.ActivationForm;
+import com.hofev.securelaunch.views.ActivationForm;
 import com.hofev.securelaunch.modules.activation.ActivationService;
 import com.hofev.securelaunch.services.FileService;
 
@@ -20,7 +20,7 @@ public class MainController {
 
         // Создает поле активации лицензии, если она не активирована
         if (!ActivationService.checkActivationLicense()) {
-            ActivationForm.showLoginForm();
+            ActivationForm.showActivationForm();
         }
     }
 

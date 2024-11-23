@@ -3,6 +3,7 @@ package com.hofev.securelaunch.modules.activation;
 // Реализует логику 1 лр
 
 import com.hofev.securelaunch.services.FileService;
+import com.hofev.securelaunch.utils.HashingUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

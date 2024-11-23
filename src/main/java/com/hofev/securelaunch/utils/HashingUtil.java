@@ -1,4 +1,4 @@
-package com.hofev.securelaunch.modules.activation;
+package com.hofev.securelaunch.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

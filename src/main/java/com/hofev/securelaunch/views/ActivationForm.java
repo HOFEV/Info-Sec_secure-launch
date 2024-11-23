@@ -1,4 +1,4 @@
-package com.hofev.securelaunch.modules.activation;
+package com.hofev.securelaunch.views;
 
 import com.hofev.securelaunch.controllers.MainController;
 
@@ -34,7 +34,7 @@ public class ActivationForm {
         }
     }
 
-    public static void showLoginForm() {
+    public static void showActivationForm() {
         // Создаем основное окно (frame)
         JFrame frame = new JFrame("Активация");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
