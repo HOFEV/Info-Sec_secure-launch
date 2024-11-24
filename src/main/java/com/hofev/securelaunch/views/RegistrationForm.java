@@ -1,5 +1,7 @@
 package com.hofev.securelaunch.views;
 
+import com.hofev.securelaunch.controllers.UserController;
+
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
@@ -118,7 +120,7 @@ public class RegistrationForm {
 
             JOptionPane.showMessageDialog(frame, "Регистрация прошла успешно!", "Успех", JOptionPane.INFORMATION_MESSAGE);
             frame.dispose(); // Закрыть форму регистрации
-            new LoginForm().show(); // Вернуться на форму входа
+            UserController.getInstance().startLoginUser(); // Открытие форма входа
         });
         buttonPanel.add(registerButton);
 
