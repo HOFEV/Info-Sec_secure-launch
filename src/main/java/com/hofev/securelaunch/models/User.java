@@ -1,6 +1,8 @@
 package com.hofev.securelaunch.models;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String login;
     private String name;
     private String surname;
