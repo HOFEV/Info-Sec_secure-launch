@@ -118,9 +118,18 @@ public class RegistrationForm {
                 return;
             }
 
-            JOptionPane.showMessageDialog(frame, "Регистрация прошла успешно!", "Успех", JOptionPane.INFORMATION_MESSAGE);
-            frame.dispose(); // Закрыть форму регистрации
-            UserController.getInstance().startLoginUser(); // Открытие форма входа
+            String[] userDate = {
+                    enteredLogin,
+                    enteredName,
+                    enteredSurname,
+                    enteredPhone,
+                    enteredEmail,
+                    enteredPassword
+            };
+
+            //JOptionPane.showMessageDialog(frame, "Регистрация прошла успешно!", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            //frame.dispose(); // Закрыть форму регистрации
+            UserController.getInstance().registrationUser(userDate, frame);
         });
         buttonPanel.add(registerButton);
 
@@ -144,6 +153,10 @@ public class RegistrationForm {
                 }
             }
         });
+    }
+
+    public static void printErrorRegistration(JFrame frame) {
+        JOptionPane.showMessageDialog(frame, "Пользователь с данным логином уже существует!", "Ошибка регистрации", JOptionPane.ERROR_MESSAGE);
     }
 
     public void show() {

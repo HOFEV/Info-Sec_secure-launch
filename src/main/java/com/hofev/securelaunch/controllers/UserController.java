@@ -1,6 +1,7 @@
 package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.exceptions.InvalidPasswordException;
+import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
 import com.hofev.securelaunch.services.UserService;
 import com.hofev.securelaunch.views.LoginForm;
@@ -26,6 +27,17 @@ public class UserController {
         registrationForm.show();
     }
 
+    // Регистрация пользователя
+    public void registrationUser(String[] dataUser, JFrame frame) {
+        try {
+            UserService.getInstance().registrationUser(dataUser);
+            frame.dispose();
+            startLoginUser();
+        } catch (UserAlreadyExistException e) {
+            RegistrationForm.printErrorRegistration(frame);
+        }
+    }
+
     // Запуск формы для входа
     public void startLoginUser() {
 
@@ -39,6 +51,7 @@ public class UserController {
     public void loginUser(String login, String password, JFrame frame) {
         try {
             UserService.getInstance().loginUser(login, password);
+            frame.dispose();
             startUserAccount();
         } catch (UserNotFoundException | InvalidPasswordException e) {
             LoginForm.printErrorLogin(frame);

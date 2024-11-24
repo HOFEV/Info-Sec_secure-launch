@@ -44,7 +44,7 @@ public class UserService {
                     dataUser[2],
                     dataUser[3],
                     dataUser[4],
-                    dataUser[5]
+                    HashingUtil.hash256(dataUser[5])
             ));
         }
 

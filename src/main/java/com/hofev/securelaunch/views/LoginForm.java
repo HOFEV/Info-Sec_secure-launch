@@ -45,7 +45,7 @@ public class LoginForm {
         gbc.gridy = 0;
         loginPanel.add(loginLabel, gbc);
 
-        loginField = new JTextField("example@mail.com", 15); // Заполнение типовым значением
+        loginField = new JTextField("admin", 15); // Заполнение типовым значением
         limitTextField(loginField, "[a-zA-Z0-9@._-]*"); // Ограничение: только разрешённые символы
         gbc.gridx = 1;
         gbc.gridy = 0;
