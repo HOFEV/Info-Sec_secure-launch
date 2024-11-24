@@ -22,13 +22,16 @@ public class UserController {
         loginForm.show();
     }
 
+    public void loginUser() {
+
+    }
+
     // Переход на форму регистрации
     public void startRegistration() {
 
         // Обображение поля регистрации
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.show();
-
     }
 
     // Переход на форму личного кибинета
