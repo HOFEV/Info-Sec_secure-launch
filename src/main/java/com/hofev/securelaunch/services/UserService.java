@@ -47,6 +47,29 @@ public class UserService {
                     HashingUtil.hash256(dataUser[5])
             ));
         }
+    }
 
+    // Передает данные о пользователе
+    /*
+    Name
+    Surname
+    Phone
+    Email
+    AccessLevel
+     */
+    public String[] getDataFromUser(String login) {
+
+        try {
+            User user = userRepository.findUserByLogin(login);
+            return new String[] {
+                    user.getName(),
+                    user.getSurname(),
+                    user.getPhone(),
+                    user.getEmail(),
+                    "user" // Заглушка access level
+            };
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

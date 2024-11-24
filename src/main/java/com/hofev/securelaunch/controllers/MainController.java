@@ -21,10 +21,12 @@ public class MainController {
         // Создает поле активации лицензии, если она не активирована
         if (!ActivationService.checkActivationLicense()) {
             ActivationForm.showActivationForm();
+        } else {
+            // Если приложение активировано, запускается инициализаци пользователя
+            UserController.getInstance().startLoginUser();
         }
 
-        // Если приложение активировано, запускается инициализаци пользователя
-        UserController.getInstance().startLoginUser();
+
     }
 
     // Активация приложения

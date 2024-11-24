@@ -52,16 +52,17 @@ public class UserController {
         try {
             UserService.getInstance().loginUser(login, password);
             frame.dispose();
-            startUserAccount();
+            startUserAccount(login);
         } catch (UserNotFoundException | InvalidPasswordException e) {
             LoginForm.printErrorLogin(frame);
         }
     }
 
     // Запуск личного кабинета пользователя
-    public void startUserAccount() {
-//        UserAccountForm userAccountForm = new UserAccountForm();
-//        userAccountForm.show();
+    public void startUserAccount(String login) {
+
+       UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
+        userAccountForm.show();
     }
 
 }

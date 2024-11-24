@@ -14,6 +14,11 @@ public class UserAccountForm {
         createAndShowGUI(name, surname, phone, email, accessLevel);
     }
 
+    public UserAccountForm(String[] dataUser) {
+        this.currentAccessLevel = dataUser[4];
+        createAndShowGUI(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
+    }
+
     private void createAndShowGUI(String name, String surname, String phone, String email, String accessLevel) {
         frame = new JFrame("Личный кабинет");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
