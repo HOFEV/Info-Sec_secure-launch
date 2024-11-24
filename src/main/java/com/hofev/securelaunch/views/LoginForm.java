@@ -120,7 +120,7 @@ public class LoginForm {
     }
 
     public static void printErrorLogin(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль", "Ошибка", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
     }
 
     public void show() {
