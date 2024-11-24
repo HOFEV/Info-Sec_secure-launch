@@ -10,7 +10,7 @@ public class UserService {
 
 
     // Процесс входа пользователя в систему
-    private static boolean isLoginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException {
+    public static boolean isLoginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException {
         UserRepository userRepository = new UserRepository();
         User user = userRepository.findUserByLogin(login);
 
@@ -20,4 +20,6 @@ public class UserService {
             throw new InvalidPasswordException("Не подходит пароль!");
         }
     }
+
+
 }
