@@ -8,10 +8,13 @@ import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.utils.HashingUtil;
 
 public class UserService {
-    private final UserRepository userRepository;
+    private static final UserService USER_SERVICE = new UserService();
+    private final UserRepository userRepository = new UserRepository();
 
-    UserService() {
-        this.userRepository = new UserRepository();
+    private UserService() {}
+
+    public static UserService getInstance() {
+        return USER_SERVICE;
     }
 
 
