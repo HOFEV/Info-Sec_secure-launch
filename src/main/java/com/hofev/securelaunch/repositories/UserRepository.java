@@ -57,12 +57,4 @@ public class UserRepository {
         }
     }
 
-    public static void main(String[] args)  {
-        UserRepository userRepository = new UserRepository();
-        try {
-            userRepository.saveUser(new User("login", "user", "user", "8999", "email", "0111"));
-        } catch (UserAlreadyExistException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }
