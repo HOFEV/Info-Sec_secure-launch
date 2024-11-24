@@ -9,17 +9,11 @@ import com.hofev.securelaunch.utils.HashingUtil;
 public class UserService {
 
 
-    // Процесс входа пользователя в систему
-    public static boolean isLoginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException {
+    // Вход пользователя
+    public static void loginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException {
         UserRepository userRepository = new UserRepository();
         User user = userRepository.findUserByLogin(login);
 
-        if (user.getPassword().equals(HashingUtil.hash256(password))) {
-            return true;
-        } else {
-            throw new InvalidPasswordException("Не подходит пароль!");
-        }
+        if (!(user.getPassword().equals(HashingUtil.hash256(password)))) throw new InvalidPasswordException("Не подходит пароль!");
     }
-
-
 }
