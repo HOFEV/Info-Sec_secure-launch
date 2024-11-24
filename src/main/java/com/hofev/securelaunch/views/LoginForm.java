@@ -78,14 +78,15 @@ public class LoginForm {
 
         // Обработчик событий для кнопки "Войти"
         loginButton.addActionListener(e -> {
-            String username = loginField.getText();
+            String login = loginField.getText();
             String password = new String(passwordField.getPassword());
 
-            if (username.isEmpty() || password.isEmpty()) {
+            if (login.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Введите логин и пароль!", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 return;
             } else {
-                JOptionPane.showMessageDialog(frame, "Добро пожаловать, " + username + "!", "Успешный вход", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(frame, "Добро пожаловать, " + username + "!", "Успешный вход", JOptionPane.INFORMATION_MESSAGE);
+                UserController.getInstance().loginUser(login, password, frame);
             }
         });
 
