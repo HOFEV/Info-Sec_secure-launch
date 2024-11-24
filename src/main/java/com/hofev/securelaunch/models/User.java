@@ -8,8 +8,13 @@ public class User {
     private String email;
     private String password;
 
-    public User() {
-
+    public User(String login, String name, String surname, String phone, String email, String password) {
+        this.login = login;
+        this.name = name;
+        this.surname = surname;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
     }
 
     public String getLogin() {
@@ -54,5 +59,9 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
