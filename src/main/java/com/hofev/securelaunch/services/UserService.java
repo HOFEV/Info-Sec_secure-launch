@@ -12,7 +12,7 @@ import com.hofev.securelaunch.utils.HashingUtil;
 public class UserService {
     private static final UserService USER_SERVICE = new UserService();
     private final UserRepository userRepository = new UserRepository();
-    private LoginAttemptService loginAttemptService = new LoginAttemptService();
+    private final LoginAttemptService loginAttemptService = new LoginAttemptService();
 
     private UserService() {}
 
