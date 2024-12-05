@@ -12,7 +12,6 @@ import com.hofev.securelaunch.utils.HashingUtil;
 public class UserService {
     private static final UserService USER_SERVICE = new UserService();
     private final UserRepository userRepository = new UserRepository();
-    private final LoginAttemptService loginAttemptService = new LoginAttemptService();
 
     private UserService() {}
 
@@ -23,7 +22,7 @@ public class UserService {
 
     // Вход пользователя
     public void loginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException, LoginBlockedException {
-        if (loginAttemptService.isLocked()) throw new LoginBlockedException("Доступ заблокирован");
+        if (LoginAttemptService.getInstance().isLocked()) throw new LoginBlockedException("Доступ заблокирован");
         User user = userRepository.findUserByLogin(login);
 
         if (!(user.getPassword().equals(HashingUtil.hash256(password)))) throw new InvalidPasswordException("Не подходит пароль!");
