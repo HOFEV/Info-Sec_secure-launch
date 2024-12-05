@@ -106,10 +106,8 @@ public class LoginForm {
         JOptionPane.showMessageDialog(frame, "Неверный логин или пароль, осталось " + attempt + " попыток.", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void setLoginButtonEnabled(boolean enabled) {
-        if (loginButton != null) {
-            loginButton.setEnabled(enabled);
-        }
+    public static void printErrorBlockedLogin(JFrame frame, long time) {
+        JOptionPane.showMessageDialog(frame, "Превышено кол-во попыток, подождите  " + time/1000 + " секунд.", "Превышение попыток входа", JOptionPane.ERROR_MESSAGE);
     }
 
     public void dispose() {
