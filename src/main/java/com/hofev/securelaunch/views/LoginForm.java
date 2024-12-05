@@ -102,8 +102,8 @@ public class LoginForm {
         });
     }
 
-    public static void printErrorLogin(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
+    public static void printErrorLogin(JFrame frame, int attempt) {
+        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль, осталось " + attempt + " попыток.", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void setLoginButtonEnabled(boolean enabled) {
