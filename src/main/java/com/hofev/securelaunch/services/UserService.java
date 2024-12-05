@@ -30,12 +30,6 @@ public class UserService {
 
     // Регистрация пользователя
     public void registrationUser(String[] dataUser) throws UserAlreadyExistException {
-//        String login;
-//        String name;
-//        String surname;
-//        String phone;
-//        String email;
-//        String password;
 
         try {
             userRepository.findUserByLogin(dataUser[0]);
@@ -53,13 +47,6 @@ public class UserService {
     }
 
     // Передает данные о пользователе
-    /*
-    Name
-    Surname
-    Phone
-    Email
-    AccessLevel
-     */
     public String[] getDataFromUser(String login) {
 
         try {
