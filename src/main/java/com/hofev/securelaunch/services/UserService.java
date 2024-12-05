@@ -1,15 +1,18 @@
 package com.hofev.securelaunch.services;
 
 import com.hofev.securelaunch.exceptions.InvalidPasswordException;
+import com.hofev.securelaunch.exceptions.LoginBlockedException;
 import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
 import com.hofev.securelaunch.models.User;
+import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.utils.HashingUtil;
 
 public class UserService {
     private static final UserService USER_SERVICE = new UserService();
     private final UserRepository userRepository = new UserRepository();
+    private LoginAttemptService loginAttemptService = new LoginAttemptService();
 
     private UserService() {}
 
@@ -19,7 +22,8 @@ public class UserService {
 
 
     // Вход пользователя
-    public void loginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException {
+    public void loginUser(String login, String password) throws UserNotFoundException, InvalidPasswordException, LoginBlockedException {
+        if (loginAttemptService.isLocked()) throw new LoginBlockedException("Доступ заблокирован");
         User user = userRepository.findUserByLogin(login);
 
         if (!(user.getPassword().equals(HashingUtil.hash256(password)))) throw new InvalidPasswordException("Не подходит пароль!");
