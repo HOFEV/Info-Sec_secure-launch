@@ -1,8 +1,10 @@
 package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.exceptions.InvalidPasswordException;
+import com.hofev.securelaunch.exceptions.LoginBlockedException;
 import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
+import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.services.UserService;
 import com.hofev.securelaunch.views.LoginForm;
 import com.hofev.securelaunch.views.RegistrationForm;
@@ -43,18 +45,22 @@ public class UserController {
 
         // Отображение поля входа
         // Графические интерфейсы пользователя
-        LoginForm loginForm = new LoginForm();
-        loginForm.show();
+        new LoginForm();
     }
 
     // Вход пользователя
     public void loginUser(String login, String password, JFrame frame) {
+        LoginAttemptService loginAttemptService = LoginAttemptService.getInstance();
         try {
             UserService.getInstance().loginUser(login, password);
             frame.dispose();
             startUserAccount(login);
         } catch (UserNotFoundException | InvalidPasswordException e) {
-            LoginForm.printErrorLogin(frame);
+            loginAttemptService.incrementAttempts();
+            LoginForm.printErrorLogin(frame, loginAttemptService.getRemainingAttempts());
+            if (loginAttemptService.getRemainingAttempts() == 0) loginAttemptService.resetAttempts();
+        } catch (LoginBlockedException e) {
+            LoginForm.printErrorBlockedLogin(frame, loginAttemptService.getRemainingLockTime());
         }
     }
 
