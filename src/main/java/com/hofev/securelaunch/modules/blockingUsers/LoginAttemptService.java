@@ -1,15 +1,21 @@
 package com.hofev.securelaunch.modules.blockingUsers;
 
 public class LoginAttemptService {
+    private static final LoginAttemptService LOGIN_ATTEMPT_SERVICE = new LoginAttemptService();
+
     private static final int MAX_ATTEMPTS = 3; // Максимум попыток
     private static final int BLOCK_TIME_MS = 5000; // Время блокировки в миллисекундах
 
     private int attempts; // Количество текущих попыток
     private long lockEndTime; // Время окончания блокировки (в миллисекундах)
 
-    public LoginAttemptService() {
+    private LoginAttemptService() {
         this.attempts = 0;
         this.lockEndTime = 0;
+    }
+
+    public static LoginAttemptService getInstance() {
+        return LOGIN_ATTEMPT_SERVICE;
     }
 
     // Увеличить количество попыток
