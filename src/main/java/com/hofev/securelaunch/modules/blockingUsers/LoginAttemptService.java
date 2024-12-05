@@ -26,6 +26,11 @@ public class LoginAttemptService {
         }
     }
 
+    // Возвращает кол-во оставшихся попыток
+    public int getRemainingAttempts() {
+        return MAX_ATTEMPTS - attempts;
+    }
+
     // Сбросить попытки
     public void resetAttempts() {
         this.attempts = 0;
