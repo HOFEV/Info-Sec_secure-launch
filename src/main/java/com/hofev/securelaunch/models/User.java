@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String phone;
     private String email;
     private String password;
+    private String userLevelAccess = "user";
 
     public User(String login, String name, String surname, String phone, String email, String password) {
         this.login = login;
@@ -65,5 +66,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserLevelAccess() {
+        return userLevelAccess;
+    }
+
+    public void setUserLevelAccess(String userLevelAccess) {
+        this.userLevelAccess = userLevelAccess;
     }
 }
