@@ -1,5 +1,9 @@
 package com.hofev.securelaunch.modules.blockingUsers;
 
+/*
+ 2 лр - Блокировка входа при повторных неправильных вводв пользователем
+ */
+
 public class LoginAttemptService {
     private static final LoginAttemptService LOGIN_ATTEMPT_SERVICE = new LoginAttemptService();
 
