@@ -24,7 +24,7 @@ public class UserController {
     // Создание формы регистрации
     public void startRegistrationForm() {
 
-        // Обображение поля регистрации
+        // Отображение поля регистрации
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.show();
     }
@@ -34,14 +34,14 @@ public class UserController {
         try {
             UserService.getInstance().registrationUser(dataUser);
             frame.dispose();
-            startLoginUser();
+            startLoginUserForm();
         } catch (UserAlreadyExistException e) {
             RegistrationForm.printErrorRegistration(frame);
         }
     }
 
     // Запуск формы для входа
-    public void startLoginUser() {
+    public void startLoginUserForm() {
 
         // Отображение поля входа
         // Графические интерфейсы пользователя
