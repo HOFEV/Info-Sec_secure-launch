@@ -22,7 +22,7 @@ public class UserController {
     }
 
     // Создание формы регистрации
-    public void startRegistration() {
+    public void startRegistrationForm() {
 
         // Обображение поля регистрации
         RegistrationForm registrationForm = new RegistrationForm();

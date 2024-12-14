@@ -78,7 +78,7 @@ public class LoginForm {
 
         registerButton.addActionListener(e -> {
             dispose();
-            UserController.getInstance().startRegistration();
+            UserController.getInstance().startRegistrationForm();
         });
 
         frame.setVisible(true);
