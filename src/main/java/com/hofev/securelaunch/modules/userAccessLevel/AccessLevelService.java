@@ -10,11 +10,11 @@ public class AccessLevelService {
 
     // Инициализация аккаунта админа
     public static void initAdminAcc() {
-        UserRepository userRepository = new UserRepository();
 
         try {
-            userRepository.findUserByLogin(AccessLevel.ADMIN.name());
+            (new UserRepository()).findUserByLogin("admin");
         } catch (UserNotFoundException e) {
+            System.out.println("Создается новый аккаунт");
             createDefaultAdminAcc();
         }
     }
