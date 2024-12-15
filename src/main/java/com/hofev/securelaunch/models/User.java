@@ -75,6 +75,6 @@ public class User implements Serializable {
     }
 
     public void setUserLevelAccess(AccessLevel access) {
-        this.userLevelAccess = userLevelAccess;
+        this.userLevelAccess = access;
     }
 }
