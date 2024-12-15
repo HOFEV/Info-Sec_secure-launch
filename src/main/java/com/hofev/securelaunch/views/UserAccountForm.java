@@ -84,6 +84,9 @@ public class UserAccountForm {
         // Если у пользователя нет прав для редактора - кнопка будет заблокирована
         if(!UserController.getInstance().getAccessForEdit(userAccessLevel)) editorButton.setEnabled(false);
 
+        // Заглушка, кнопка пока не имеет практической реализации
+        editButton.setEnabled(false);
+
         buttonPanel.add(editorButton);
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
