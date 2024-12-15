@@ -1,5 +1,6 @@
 package com.hofev.securelaunch.views;
 
+import com.hofev.securelaunch.controllers.UserController;
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +17,7 @@ public class UserAccountForm {
         this(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
     }
 
-    private void createAndShowGUI(String name, String surname, String phone, String email, String accessLevel) {
+    private void createAndShowGUI(String name, String surname, String phone, String email, String userAccessLevel) {
         frame = new JFrame("Личный кабинет");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(600, 300);
@@ -66,7 +67,7 @@ public class UserAccountForm {
         dataPanel.add(emailField);
 
         JLabel accessLevelTitleLabel = new JLabel("Уровень доступа:");
-        accessLevelLabel = new JLabel(accessLevel); // Уровень доступа отображается как метка
+        accessLevelLabel = new JLabel(userAccessLevel); // Уровень доступа отображается как метка
         dataPanel.add(accessLevelTitleLabel);
         dataPanel.add(accessLevelLabel);
 
@@ -79,6 +80,9 @@ public class UserAccountForm {
         JButton editButton = new JButton("Редактировать");
         JButton saveButton = new JButton("Сохранить");
         saveButton.setEnabled(false); // Пока не нажата "Редактировать"
+
+        // Если у пользователя нет прав для редактора - кнопка будет заблокирована
+        if(!UserController.getInstance().getAccessForEdit(userAccessLevel)) editorButton.setEnabled(false);
 
         buttonPanel.add(editorButton);
         buttonPanel.add(editButton);
