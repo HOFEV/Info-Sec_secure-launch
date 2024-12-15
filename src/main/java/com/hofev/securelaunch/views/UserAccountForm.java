@@ -75,10 +75,12 @@ public class UserAccountForm {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        JButton editorButton = new JButton("Редактор");
         JButton editButton = new JButton("Редактировать");
         JButton saveButton = new JButton("Сохранить");
         saveButton.setEnabled(false); // Пока не нажата "Редактировать"
 
+        buttonPanel.add(editorButton);
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
 
