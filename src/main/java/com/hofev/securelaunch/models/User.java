@@ -1,5 +1,7 @@
 package com.hofev.securelaunch.models;
 
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -9,7 +11,7 @@ public class User implements Serializable {
     private String phone;
     private String email;
     private String password;
-    private String userLevelAccess = "user";
+    private AccessLevel userLevelAccess = AccessLevel.USER;
 
     public User(String login, String name, String surname, String phone, String email, String password) {
         this.login = login;
@@ -68,11 +70,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getUserLevelAccess() {
+    public AccessLevel getUserLevelAccess() {
         return userLevelAccess;
     }
 
-    public void setUserLevelAccess(String userLevelAccess) {
+    public void setUserLevelAccess(AccessLevel access) {
         this.userLevelAccess = userLevelAccess;
     }
 }
