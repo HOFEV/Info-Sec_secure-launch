@@ -5,6 +5,7 @@ import com.hofev.securelaunch.exceptions.LoginBlockedException;
 import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
 import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.services.UserService;
 import com.hofev.securelaunch.views.LoginForm;
 import com.hofev.securelaunch.views.RegistrationForm;
@@ -69,6 +70,11 @@ public class UserController {
 
         UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
         userAccountForm.show();
+    }
+
+    // Предоставляет разрешение на работу с редактором
+    public boolean getAccessForEdit(String userAccessLevel) {
+        return AccessLevel.valueOf(userAccessLevel).isEditingRight();
     }
 
 }
