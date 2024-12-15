@@ -14,7 +14,6 @@ public class AccessLevelService {
         try {
             (new UserRepository()).findUserByLogin("admin");
         } catch (UserNotFoundException e) {
-            System.out.println("Создается новый аккаунт");
             createDefaultAdminAcc();
         }
     }
