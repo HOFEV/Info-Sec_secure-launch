@@ -7,16 +7,13 @@ public class UserAccountForm {
     private JFrame frame;
     private JTextField nameField, surnameField, phoneField, emailField;
     private JLabel accessLevelLabel;
-    private String currentAccessLevel;
 
     public UserAccountForm(String name, String surname, String phone, String email, String accessLevel) {
-        this.currentAccessLevel = accessLevel;
         createAndShowGUI(name, surname, phone, email, accessLevel);
     }
 
     public UserAccountForm(String[] dataUser) {
-        this.currentAccessLevel = dataUser[4];
-        createAndShowGUI(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
+        this(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
     }
 
     private void createAndShowGUI(String name, String surname, String phone, String email, String accessLevel) {
@@ -99,11 +96,12 @@ public class UserAccountForm {
             String updatedSurname = surnameField.getText();
             String updatedPhone = phoneField.getText();
             String updatedEmail = emailField.getText();
+            String updatedAccessLevel = accessLevelLabel.getText();
 
             // Вывод сохранённых данных
             JOptionPane.showMessageDialog(frame, String.format(
                     "Данные сохранены:\nИмя: %s\nФамилия: %s\nТелефон: %s\nПочта: %s\nУровень доступа: %s",
-                    updatedName, updatedSurname, updatedPhone, updatedEmail, currentAccessLevel));
+                    updatedName, updatedSurname, updatedPhone, updatedEmail, updatedAccessLevel));
 
             // Отключить редактирование
             nameField.setEditable(false);

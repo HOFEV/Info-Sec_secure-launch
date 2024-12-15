@@ -67,7 +67,7 @@ public class UserController {
     // Запуск личного кабинета пользователя
     public void startUserAccount(String login) {
 
-       UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
+        UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
         userAccountForm.show();
     }
 
