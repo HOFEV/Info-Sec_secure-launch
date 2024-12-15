@@ -56,7 +56,7 @@ public class UserService {
                     user.getSurname(),
                     user.getPhone(),
                     user.getEmail(),
-                    "user" // Заглушка access level
+                    user.getUserLevelAccess().name()
             };
         } catch (UserNotFoundException e) {
             throw new RuntimeException(e);
