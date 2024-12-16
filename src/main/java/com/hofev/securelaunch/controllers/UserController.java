@@ -88,4 +88,9 @@ public class UserController {
     public String[] getAvailableUserRules() {
         return AccessLevelService.getListOfAvailableRolesToChange();
     }
+
+    // Изменяет роль выбранного пользователя
+    public void changeRoleForUser(String login, String newRole) {
+        AccessLevelService.changeRoleUser(login, newRole);
+    }
 }

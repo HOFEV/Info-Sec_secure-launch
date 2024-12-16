@@ -6,9 +6,7 @@ import com.hofev.securelaunch.models.User;
 import com.hofev.securelaunch.repositories.UserRepository;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class AccessLevelService {
     private AccessLevelService() {}
@@ -33,6 +31,17 @@ public class AccessLevelService {
             userRules[i++] = accessLevel.name();
         }
         return userRules;
+    }
+
+    // Изменение уровня доступа пользователя
+    public static void changeRoleUser(String login, String userRole) {
+        UserRepository userRepository = new UserRepository();
+        try {
+            userRepository.findUserByLogin(login).setUserLevelAccess(AccessLevel.valueOf(userRole));
+            userRepository.updateUserList();
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Список с разрешенными для изменения ролями

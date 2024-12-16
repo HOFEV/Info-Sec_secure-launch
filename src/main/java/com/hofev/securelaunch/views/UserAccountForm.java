@@ -105,16 +105,13 @@ public class UserAccountForm {
             String[] userList = UserController.getInstance().getUserList();
 
             // Добавление пользователей в список
-            for (String user : userList) {
-                if (user.equals("admin")) continue;
-                JMenuItem menuItem = new JMenuItem(user);
+            for (String userLogin : userList) {
+                if (userLogin.equals("admin")) continue;
+                JMenuItem menuItem = new JMenuItem(userLogin);
 
                 menuItem.addActionListener(e1 -> {
-                    String selectedRole = showRoleSelectionDialog(user);
-
-                    if (selectedRole != null) {
-                        System.out.println("Выбрана роль: " + selectedRole);
-                    }
+                    String selectedRole = showRoleSelectionDialog(userLogin);
+                    if (selectedRole != null) UserController.getInstance().changeRoleForUser(userLogin, selectedRole);
                 });
 
                 userMenu.add(menuItem);
