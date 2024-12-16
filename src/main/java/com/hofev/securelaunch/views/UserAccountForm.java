@@ -161,8 +161,8 @@ public class UserAccountForm {
         // Определяем доступные роли
         String[] roles = UserController.getInstance().getAvailableUserRules();
 
-        // Показываем диалог выбора роли
-        String selectedRole = (String) JOptionPane.showInputDialog(
+        // Возвращает выбранную роль или null, если пользователь отменил выбор
+        return (String) JOptionPane.showInputDialog(
                 frame,
                 "Выберите роль для пользователя: " + user,
                 "Выбор роли",
@@ -171,8 +171,6 @@ public class UserAccountForm {
                 roles,
                 roles[0]
         );
-
-        return selectedRole; // Возвращает выбранную роль или null, если пользователь отменил выбор
     }
 
     public void show() {
