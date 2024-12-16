@@ -1,5 +1,8 @@
 package com.hofev.securelaunch.controllers;
 
+import com.hofev.securelaunch.exceptions.UserNotFoundException;
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
+import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.views.ActivationForm;
 import com.hofev.securelaunch.modules.activation.ActivationService;
 import com.hofev.securelaunch.services.FileService;
@@ -22,8 +25,8 @@ public class MainController {
         if (!ActivationService.checkActivationLicense()) {
             ActivationForm.showActivationForm();
         } else {
-            // Если приложение активировано, запускается инициализаци пользователя
-            UserController.getInstance().startLoginUser();
+            // Если приложение активировано, запускается инициализация пользователя
+            startUserController();
         }
 
 
@@ -40,7 +43,7 @@ public class MainController {
             frame.dispose(); // Закрытие окна после успешной активации
 
             // Вход в систему
-            UserController.getInstance().startLoginUser();
+            startUserController();
 
             return true;
         } else {
@@ -48,5 +51,13 @@ public class MainController {
             return false;
         }
 
+    }
+
+    private void startUserController() {
+        // Перед запуском приложения инициализируется аккаунт админа
+        AccessLevelService.initAdminAcc();
+
+        // Запуск логирования пользователя
+        UserController.getInstance().startLoginUserForm();
     }
 }

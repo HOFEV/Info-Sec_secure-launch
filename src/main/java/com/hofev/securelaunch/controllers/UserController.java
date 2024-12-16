@@ -1,9 +1,15 @@
 package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.exceptions.InvalidPasswordException;
+import com.hofev.securelaunch.exceptions.LoginBlockedException;
 import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
+import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
+import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.services.UserService;
+import com.hofev.securelaunch.views.EditorForm;
 import com.hofev.securelaunch.views.LoginForm;
 import com.hofev.securelaunch.views.RegistrationForm;
 import com.hofev.securelaunch.views.UserAccountForm;
@@ -20,9 +26,9 @@ public class UserController {
     }
 
     // Создание формы регистрации
-    public void startRegistration() {
+    public void startRegistrationForm() {
 
-        // Обображение поля регистрации
+        // Отображение поля регистрации
         RegistrationForm registrationForm = new RegistrationForm();
         registrationForm.show();
     }
@@ -32,37 +38,64 @@ public class UserController {
         try {
             UserService.getInstance().registrationUser(dataUser);
             frame.dispose();
-            startLoginUser();
+            startLoginUserForm();
         } catch (UserAlreadyExistException e) {
             RegistrationForm.printErrorRegistration(frame);
         }
     }
 
     // Запуск формы для входа
-    public void startLoginUser() {
+    public void startLoginUserForm() {
 
         // Отображение поля входа
         // Графические интерфейсы пользователя
-        LoginForm loginForm = new LoginForm();
-        loginForm.show();
+        new LoginForm();
     }
 
     // Вход пользователя
     public void loginUser(String login, String password, JFrame frame) {
+        LoginAttemptService loginAttemptService = LoginAttemptService.getInstance();
         try {
             UserService.getInstance().loginUser(login, password);
             frame.dispose();
             startUserAccount(login);
         } catch (UserNotFoundException | InvalidPasswordException e) {
-            LoginForm.printErrorLogin(frame);
+            loginAttemptService.incrementAttempts();
+            LoginForm.printErrorLogin(frame, loginAttemptService.getRemainingAttempts());
+            if (loginAttemptService.getRemainingAttempts() == 0) loginAttemptService.resetAttempts();
+        } catch (LoginBlockedException e) {
+            LoginForm.printErrorBlockedLogin(frame, loginAttemptService.getRemainingLockTime());
         }
     }
 
     // Запуск личного кабинета пользователя
     public void startUserAccount(String login) {
 
-       UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
+        UserAccountForm userAccountForm = new UserAccountForm(UserService.getInstance().getDataFromUser(login));
         userAccountForm.show();
     }
 
+    // Предоставляет разрешение на работу с редактором
+    public boolean getAccessForEdit(String userAccessLevel) {
+        return AccessLevel.valueOf(userAccessLevel).isEditingRight();
+    }
+
+    // Предоставляет список всех пользователей
+    public String[] getUserList() {
+        return (new UserRepository()).getUserList();
+    }
+
+    // Предоставляет все доступные для изменения роли
+    public String[] getAvailableUserRules() {
+        return AccessLevelService.getListOfAvailableRolesToChange();
+    }
+
+    // Изменяет роль выбранного пользователя
+    public void changeRoleForUser(String login, String newRole) {
+        AccessLevelService.changeRoleUser(login, newRole);
+    }
+
+    public void startEditor() {
+        EditorForm editorForm = new EditorForm();
+    }
 }

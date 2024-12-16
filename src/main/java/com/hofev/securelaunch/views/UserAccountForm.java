@@ -1,5 +1,6 @@
 package com.hofev.securelaunch.views;
 
+import com.hofev.securelaunch.controllers.UserController;
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,19 +8,16 @@ public class UserAccountForm {
     private JFrame frame;
     private JTextField nameField, surnameField, phoneField, emailField;
     private JLabel accessLevelLabel;
-    private String currentAccessLevel;
 
     public UserAccountForm(String name, String surname, String phone, String email, String accessLevel) {
-        this.currentAccessLevel = accessLevel;
         createAndShowGUI(name, surname, phone, email, accessLevel);
     }
 
     public UserAccountForm(String[] dataUser) {
-        this.currentAccessLevel = dataUser[4];
-        createAndShowGUI(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
+        this(dataUser[0], dataUser[1], dataUser[2], dataUser[3], dataUser[4]);
     }
 
-    private void createAndShowGUI(String name, String surname, String phone, String email, String accessLevel) {
+    private void createAndShowGUI(String name, String surname, String phone, String email, String userAccessLevel) {
         frame = new JFrame("Личный кабинет");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(600, 300);
@@ -69,7 +67,7 @@ public class UserAccountForm {
         dataPanel.add(emailField);
 
         JLabel accessLevelTitleLabel = new JLabel("Уровень доступа:");
-        accessLevelLabel = new JLabel(accessLevel); // Уровень доступа отображается как метка
+        accessLevelLabel = new JLabel(userAccessLevel); // Уровень доступа отображается как метка
         dataPanel.add(accessLevelTitleLabel);
         dataPanel.add(accessLevelLabel);
 
@@ -78,14 +76,58 @@ public class UserAccountForm {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        JButton ruleButton = new JButton("Выдать роль");
+        JButton editorButton = new JButton("Редактор");
         JButton editButton = new JButton("Редактировать");
         JButton saveButton = new JButton("Сохранить");
         saveButton.setEnabled(false); // Пока не нажата "Редактировать"
 
+        // Если у пользователя нет прав для редактора - кнопка будет заблокирована
+        if(!UserController.getInstance().getAccessForEdit(userAccessLevel)) editorButton.setEnabled(false);
+
+        // скрывает кнопку выдачи ролей, в случае если это не админ
+        if (!userAccessLevel.equals("ADMIN")) ruleButton.setVisible(false);
+
+        // Заглушка, кнопка пока не имеет практической реализации
+        editButton.setEnabled(false);
+
+        buttonPanel.add(ruleButton);
+        buttonPanel.add(editorButton);
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
 
         // Обработчики событий
+
+        // Переход в текстовый редактор
+        editorButton.addActionListener(e -> {
+            UserController.getInstance().startEditor();
+        });
+
+        // Изменение роли пользователя
+        ruleButton.addActionListener(e -> {
+            // Создание списка
+            JPopupMenu userMenu = new JPopupMenu();
+
+            // Получение списка пользователей
+            String[] userList = UserController.getInstance().getUserList();
+
+            // Добавление пользователей в список
+            for (String userLogin : userList) {
+                if (userLogin.equals("admin")) continue;
+                JMenuItem menuItem = new JMenuItem(userLogin);
+
+                menuItem.addActionListener(e1 -> {
+                    String selectedRole = showRoleSelectionDialog(userLogin);
+                    if (selectedRole != null) UserController.getInstance().changeRoleForUser(userLogin, selectedRole);
+                });
+
+                userMenu.add(menuItem);
+            }
+
+            userMenu.show(ruleButton, 0, ruleButton.getHeight());
+
+        });
+
         editButton.addActionListener(e -> {
             nameField.setEditable(true);
             surnameField.setEditable(true);
@@ -99,11 +141,12 @@ public class UserAccountForm {
             String updatedSurname = surnameField.getText();
             String updatedPhone = phoneField.getText();
             String updatedEmail = emailField.getText();
+            String updatedAccessLevel = accessLevelLabel.getText();
 
             // Вывод сохранённых данных
             JOptionPane.showMessageDialog(frame, String.format(
                     "Данные сохранены:\nИмя: %s\nФамилия: %s\nТелефон: %s\nПочта: %s\nУровень доступа: %s",
-                    updatedName, updatedSurname, updatedPhone, updatedEmail, currentAccessLevel));
+                    updatedName, updatedSurname, updatedPhone, updatedEmail, updatedAccessLevel));
 
             // Отключить редактирование
             nameField.setEditable(false);
@@ -115,6 +158,23 @@ public class UserAccountForm {
 
         // Отображение окна
         frame.setVisible(true);
+    }
+
+    // Метод для отображения диалога выбора роли
+    private String showRoleSelectionDialog(String user) {
+        // Определяем доступные роли
+        String[] roles = UserController.getInstance().getAvailableUserRules();
+
+        // Возвращает выбранную роль или null, если пользователь отменил выбор
+        return (String) JOptionPane.showInputDialog(
+                frame,
+                "Выберите роль для пользователя: " + user,
+                "Выбор роли",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                roles,
+                roles[0]
+        );
     }
 
     public void show() {

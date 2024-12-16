@@ -26,6 +26,16 @@ public class UserRepository {
         saveUsersToFile();
     }
 
+    // Обновление базы пользователей
+    public void updateUserList() {
+        saveUsersToFile();
+    }
+
+    // Получение списка всех логинов пользователей
+    public String[] getUserList() {
+        return USER_LIST.keySet().toArray(new String[0]);
+    }
+
     // Поиск пользователя по логину
     public User findUserByLogin(String login) throws UserNotFoundException {
         if (USER_LIST.containsKey(login)) return USER_LIST.get(login);

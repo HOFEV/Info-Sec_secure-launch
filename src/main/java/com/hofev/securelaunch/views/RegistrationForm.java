@@ -89,7 +89,7 @@ public class RegistrationForm {
         backButton.setBackground(Color.LIGHT_GRAY);
         backButton.addActionListener(e -> {
             frame.dispose(); // Закрыть текущую форму
-            UserController.getInstance().startLoginUser(); // Открыть форму входа
+            UserController.getInstance().startLoginUserForm(); // Открыть форму входа
         });
         buttonPanel.add(backButton);
 

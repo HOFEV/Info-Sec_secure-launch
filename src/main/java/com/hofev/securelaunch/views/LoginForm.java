@@ -10,26 +10,24 @@ public class LoginForm {
     private JFrame frame;
     private JTextField loginField;
     private JPasswordField passwordField;
+    private static JButton loginButton; // Делаем статической для доступа из контроллера
 
     public LoginForm() {
         createAndShowGUI();
     }
 
     private void createAndShowGUI() {
-        // Создание основного окна
         frame = new JFrame("Вход");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false); // Запрещаем изменять размер окна
+        frame.setResizable(false);
 
-        // Основная панель
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.DARK_GRAY);
         mainPanel.setLayout(new BorderLayout());
         frame.add(mainPanel);
 
-        // Панель для формы входа
         JPanel loginPanel = new JPanel();
         loginPanel.setBackground(Color.LIGHT_GRAY);
         loginPanel.setLayout(new GridBagLayout());
@@ -39,65 +37,50 @@ public class LoginForm {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Логин
         JLabel loginLabel = new JLabel("Логин:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         loginPanel.add(loginLabel, gbc);
 
-        loginField = new JTextField("admin", 15); // Заполнение типовым значением
-        limitTextField(loginField, "[a-zA-Z0-9@._-]*"); // Ограничение: только разрешённые символы
+        loginField = new JTextField("admin", 15);
+        limitTextField(loginField, "[a-zA-Z0-9@._-]*");
         gbc.gridx = 1;
         gbc.gridy = 0;
         loginPanel.add(loginField, gbc);
 
-        // Пароль
         JLabel passwordLabel = new JLabel("Пароль:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         loginPanel.add(passwordLabel, gbc);
 
-        passwordField = new JPasswordField(15); // Оставляем пустым
+        passwordField = new JPasswordField(15);
         gbc.gridx = 1;
         gbc.gridy = 1;
         loginPanel.add(passwordField, gbc);
 
-        // Кнопка входа
-        JButton loginButton = new JButton("Войти");
+        loginButton = new JButton("Войти");
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         loginPanel.add(loginButton, gbc);
 
-        // Кнопка регистрации
         JButton registerButton = new JButton("Регистрация");
         registerButton.setBackground(Color.LIGHT_GRAY);
         registerButton.setFocusPainted(false);
         mainPanel.add(registerButton, BorderLayout.SOUTH);
 
-        // Обработчик событий для кнопки "Войти"
         loginButton.addActionListener(e -> {
             String login = loginField.getText();
             String password = new String(passwordField.getPassword());
-
-            if (login.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Введите логин и пароль!", "Ошибка", JOptionPane.ERROR_MESSAGE);
-                return;
-            } else {
-                //JOptionPane.showMessageDialog(frame, "Добро пожаловать, " + username + "!", "Успешный вход", JOptionPane.INFORMATION_MESSAGE);
-                UserController.getInstance().loginUser(login, password, frame);
-            }
+            UserController.getInstance().loginUser(login, password, frame);
         });
 
-        // Обработчик событий для кнопки "Регистрация"
         registerButton.addActionListener(e -> {
-            //JOptionPane.showMessageDialog(frame, "Переход на форму регистрации...", "Регистрация", JOptionPane.INFORMATION_MESSAGE);
             dispose();
-            UserController.getInstance().startRegistration(); // Переход на регистрацию
+            UserController.getInstance().startRegistrationForm();
         });
 
-        // Отображение окна
         frame.setVisible(true);
     }
 
@@ -119,12 +102,12 @@ public class LoginForm {
         });
     }
 
-    public static void printErrorLogin(JFrame frame) {
-        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
+    public static void printErrorLogin(JFrame frame, int attempt) {
+        JOptionPane.showMessageDialog(frame, "Неверный логин или пароль, осталось " + attempt + " попыток.", "Ошибка входа", JOptionPane.ERROR_MESSAGE);
     }
 
-    public void show() {
-        frame.setVisible(true);
+    public static void printErrorBlockedLogin(JFrame frame, long time) {
+        JOptionPane.showMessageDialog(frame, "Превышено кол-во попыток, подождите  " + time/1000 + " секунд.", "Превышение попыток входа", JOptionPane.ERROR_MESSAGE);
     }
 
     public void dispose() {
