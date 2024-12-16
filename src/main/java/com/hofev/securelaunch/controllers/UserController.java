@@ -6,6 +6,7 @@ import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
 import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
+import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
 import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.services.UserService;
 import com.hofev.securelaunch.views.LoginForm;
@@ -81,5 +82,10 @@ public class UserController {
     // Предоставляет список всех пользователей
     public String[] getUserList() {
         return (new UserRepository()).getUserList();
+    }
+
+    // Предоставляет все доступные для изменения роли
+    public String[] getAvailableUserRules() {
+        return AccessLevelService.getListOfAvailableRolesToChange();
     }
 }
