@@ -9,6 +9,7 @@ import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
 import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.services.UserService;
+import com.hofev.securelaunch.views.EditorForm;
 import com.hofev.securelaunch.views.LoginForm;
 import com.hofev.securelaunch.views.RegistrationForm;
 import com.hofev.securelaunch.views.UserAccountForm;
@@ -92,5 +93,9 @@ public class UserController {
     // Изменяет роль выбранного пользователя
     public void changeRoleForUser(String login, String newRole) {
         AccessLevelService.changeRoleUser(login, newRole);
+    }
+
+    public void startEditor() {
+        EditorForm editorForm = new EditorForm();
     }
 }
