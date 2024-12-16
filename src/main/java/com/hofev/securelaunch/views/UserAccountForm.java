@@ -96,6 +96,7 @@ public class UserAccountForm {
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
 
+        // Обработчики событий
         ruleButton.addActionListener(e -> {
             // Создание списка
             JPopupMenu userMenu = new JPopupMenu();
@@ -109,7 +110,11 @@ public class UserAccountForm {
                 JMenuItem menuItem = new JMenuItem(user);
 
                 menuItem.addActionListener(e1 -> {
-                    System.out.println("hello world!");
+                    String selectedRole = showRoleSelectionDialog(user);
+
+                    if (selectedRole != null) {
+                        System.out.println("Выбрана роль: " + selectedRole);
+                    }
                 });
 
                 userMenu.add(menuItem);
@@ -119,7 +124,6 @@ public class UserAccountForm {
 
         });
 
-        // Обработчики событий
         editButton.addActionListener(e -> {
             nameField.setEditable(true);
             surnameField.setEditable(true);
@@ -150,6 +154,25 @@ public class UserAccountForm {
 
         // Отображение окна
         frame.setVisible(true);
+    }
+
+    // Метод для отображения диалога выбора роли
+    private String showRoleSelectionDialog(String user) {
+        // Определяем доступные роли
+        String[] roles = UserController.getInstance().getAvailableUserRules();
+
+        // Показываем диалог выбора роли
+        String selectedRole = (String) JOptionPane.showInputDialog(
+                frame,
+                "Выберите роль для пользователя: " + user,
+                "Выбор роли",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                roles,
+                roles[0]
+        );
+
+        return selectedRole; // Возвращает выбранную роль или null, если пользователь отменил выбор
     }
 
     public void show() {
