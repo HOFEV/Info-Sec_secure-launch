@@ -76,6 +76,7 @@ public class UserAccountForm {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        JButton ruleButton = new JButton("Выдать роль");
         JButton editorButton = new JButton("Редактор");
         JButton editButton = new JButton("Редактировать");
         JButton saveButton = new JButton("Сохранить");
@@ -84,9 +85,13 @@ public class UserAccountForm {
         // Если у пользователя нет прав для редактора - кнопка будет заблокирована
         if(!UserController.getInstance().getAccessForEdit(userAccessLevel)) editorButton.setEnabled(false);
 
+        // скрывает кнопку выдачи ролей, в случае если это не админ
+        if (!userAccessLevel.equals("ADMIN")) ruleButton.setVisible(false);
+
         // Заглушка, кнопка пока не имеет практической реализации
         editButton.setEnabled(false);
 
+        buttonPanel.add(ruleButton);
         buttonPanel.add(editorButton);
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
