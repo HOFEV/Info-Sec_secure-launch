@@ -96,6 +96,29 @@ public class UserAccountForm {
         buttonPanel.add(editButton);
         buttonPanel.add(saveButton);
 
+        ruleButton.addActionListener(e -> {
+            // Создание списка
+            JPopupMenu userMenu = new JPopupMenu();
+
+            // Получение списка пользователей
+            String[] userList = UserController.getInstance().getUserList();
+
+            // Добавление пользователей в список
+            for (String user : userList) {
+                if (user.equals("admin")) continue;
+                JMenuItem menuItem = new JMenuItem(user);
+
+                menuItem.addActionListener(e1 -> {
+                    System.out.println("hello world!");
+                });
+
+                userMenu.add(menuItem);
+            }
+
+            userMenu.show(ruleButton, 0, ruleButton.getHeight());
+
+        });
+
         // Обработчики событий
         editButton.addActionListener(e -> {
             nameField.setEditable(true);
