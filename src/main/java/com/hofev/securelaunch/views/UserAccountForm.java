@@ -97,6 +97,13 @@ public class UserAccountForm {
         buttonPanel.add(saveButton);
 
         // Обработчики событий
+
+        // Переход в текстовый редактор
+        editorButton.addActionListener(e -> {
+            UserController.getInstance().startEditor();
+        });
+
+        // Изменение роли пользователя
         ruleButton.addActionListener(e -> {
             // Создание списка
             JPopupMenu userMenu = new JPopupMenu();
