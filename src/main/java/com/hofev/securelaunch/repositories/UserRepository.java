@@ -26,6 +26,11 @@ public class UserRepository {
         saveUsersToFile();
     }
 
+    // Обновление базы пользователей
+    public void updateUserList() {
+        saveUsersToFile();
+    }
+
     // Получение списка всех логинов пользователей
     public String[] getUserList() {
         return USER_LIST.keySet().toArray(new String[0]);
