@@ -63,22 +63,16 @@ public class EditorForm extends JFrame {
 
         // Обработка событий
 
-        // Кнопка выбора файла
+        // Действие выбора файла
         loadButton.addActionListener(e -> {
             String filePath = promptForFilePath();
-            if (filePath != null) UserController.getInstance().startWorkWithFileObj((new File(filePath)), this);
+            if (filePath != null) UserController.getInstance().openFileObj((new File(filePath)), this);
         });
 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentFile != null) {
-                    enableEditing(true);
-                    saveButton.setEnabled(true); // Разрешаем сохранение
-                } else {
-                    showError("Нет загруженного файла для редактирования.");
-                }
-            }
+        // Действие редактирования файла
+        editButton.addActionListener(e -> {
+            if (currentFile == null) showError("Нет загруженного файла для редактирования.");
+            UserController.getInstance().editFileObj(this);
         });
 
         saveButton.addActionListener(new ActionListener() {

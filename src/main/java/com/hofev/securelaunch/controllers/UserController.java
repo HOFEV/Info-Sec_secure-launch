@@ -1,7 +1,6 @@
 package com.hofev.securelaunch.controllers;
 
 import com.hofev.securelaunch.exceptions.*;
-import com.hofev.securelaunch.models.FileObj;
 import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
@@ -102,7 +101,8 @@ public class UserController {
         EditorForm editorForm = new EditorForm();
     }
 
-    public void startWorkWithFileObj(File file, EditorForm editorForm) {
+    // Открытие и подготовка файла к редактированию
+    public void openFileObj(File file, EditorForm editorForm) {
         //Проверка файла в базе на совпадение хэша
         try {
             if (!FileHistoryService.CheckMatchOfHashFileContent(file)) {
@@ -141,5 +141,18 @@ public class UserController {
 
         // Поле редактирования пока заблокировано
         editorForm.enableEditing(false);
+    }
+
+    // Редактирование файла
+    public void editFileObj(EditorForm editorForm) {
+
+        // Открытие доступа к изменению текста
+        editorForm.enableEditing(true);
+
+        // Активируется кнопка сохранения документа
+        editorForm.setEnableSaveButton(true);
+
+        // Деактивируется кнопка редактирования
+        editorForm.setEnableEditButton(false);
     }
 }
