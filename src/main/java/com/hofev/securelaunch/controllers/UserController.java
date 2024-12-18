@@ -155,4 +155,34 @@ public class UserController {
         // Деактивируется кнопка редактирования
         editorForm.setEnableEditButton(false);
     }
+
+    // Сохранение измений в файле
+    public void saveFileObj(File currentFile, EditorForm editorForm) {
+
+        // Получение обновленного текста
+        String updatedText = editorForm.getText();
+
+        // Блокирует поле для изменения текста
+        editorForm.enableEditing(false);
+
+        // Выключает кнопку сохранения
+        editorForm.setEnableSaveButton(false);
+
+        // Перезапись текста в файл
+        try {
+            // Перезапись текста в файл
+            FileService.writeFileContent(currentFile, updatedText);
+
+            // Обновление хэш содержимого файла
+            FileHistoryService.updateHashFileContent(currentFile, updatedText);
+
+        } catch (IOException e) {
+            editorForm.showError("Ошибка при сохранении файла!" + e.getMessage());
+        } catch (FileObjNotFoundException e) {
+            editorForm.showError("Выбранный файл не существует!" + e.getMessage());
+        }
+
+        // Очищает поле текста
+        editorForm.showText("");
+    }
 }

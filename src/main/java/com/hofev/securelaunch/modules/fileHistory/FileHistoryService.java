@@ -22,12 +22,24 @@ public class FileHistoryService {
         );
     }
 
+    // Обновление хэш содержимого файла
+    public static void updateHashFileContent(File file, String content) throws FileObjNotFoundException {
+        FileObjRepository fileObjRepository = new FileObjRepository();
+        // Изменение хэш содержимого файла в истории файлов
+        fileObjRepository.getFileObjByName(file.getName()).setHashData(getHashOfContentFile(content));
+        // Обновление истории файлов
+        fileObjRepository.updateFileObjOnFile();
+        System.out.println("Сохраняется хэш: " + getHashOfContentFile(content));
+    }
+
     // Проверка на совпадение хэша содержимого
     public static boolean CheckMatchOfHashFileContent(File file) throws FileObjNotFoundException, IOException {
         // Получение хэш содержимого файла из базы
         String hashFromFileData = (new FileObjRepository()).getFileObjByName(file.getName()).getHashData();
+        System.out.println("Получено из базы: " + hashFromFileData);
         // Получение хэш содержимого текущего файла
         String hashFromFile = getHashOfContentFile(FileService.readFileContent(file));
+        System.out.println("Получено из текущего файла: " + hashFromFile);
         return hashFromFile.equals(hashFromFileData);
     }
 

@@ -75,23 +75,14 @@ public class EditorForm extends JFrame {
             UserController.getInstance().editFileObj(this);
         });
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentFile != null) {
-                    String updatedText = getText();
-                    try {
-                        writeFileContent(currentFile, updatedText);
-                        enableEditing(false);
-                        saveButton.setEnabled(false);
-                        JOptionPane.showMessageDialog(EditorForm.this, "Файл успешно сохранён.", "Успех", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException ex) {
-                        showError("Ошибка при сохранении файла: " + ex.getMessage());
-                    }
-                } else {
-                    showError("Нет загруженного файла для сохранения.");
-                }
+        // Действие сохрание файла
+        saveButton.addActionListener(e -> {
+            if (currentFile == null) {
+                showError("Нет загруженного файла для сохранения.");
+                return;
             }
+
+            UserController.getInstance().saveFileObj(currentFile, this);
         });
     }
 
@@ -116,18 +107,6 @@ public class EditorForm extends JFrame {
     // Обновление файла, над которым ведется работа
     public void updateCurrentFile(File file) {
         this.currentFile = file;
-    }
-
-    /**
-     * Запись содержимого в файл.
-     *
-     * @param file    Файл для записи.
-     * @param content Содержимое для записи.
-     * @throws IOException Если происходит ошибка ввода/вывода.
-     */
-    private void writeFileContent(File file, String content) throws IOException {
-        // Используем Files.write с опцией TRUNCATE_EXISTING для перезаписи файла
-        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     /**

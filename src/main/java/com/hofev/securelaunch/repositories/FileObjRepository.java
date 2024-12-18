@@ -12,7 +12,7 @@ public class FileObjRepository {
     private Map<String, FileObj> FILE_OBJ_LIST;
 
     public FileObjRepository() {
-        updateFileObjMap();
+        loadFileObjMap();
     }
 
     // Добавление файла в историю файлов
@@ -37,8 +37,13 @@ public class FileObjRepository {
         }
     }
 
+    // Выгружает список файлов обратно в файл
+    public void updateFileObjOnFile() {
+        saveFileHistoryMap();
+    }
+
     // Обновляет список файлов
-    private void updateFileObjMap() {
+    private void loadFileObjMap() {
         this.FILE_OBJ_LIST = loadFileObjFromFile();
     }
 

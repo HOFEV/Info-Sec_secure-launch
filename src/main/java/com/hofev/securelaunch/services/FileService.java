@@ -29,6 +29,12 @@ public class FileService {
         return Files.readString(file.toPath(), StandardCharsets.UTF_8);
     }
 
+    // Перезапись текста в файл
+    public static void writeFileContent(File file, String content) throws IOException {
+        // Используем Files.write с опцией TRUNCATE_EXISTING для перезаписи файла
+        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
     public static void putKeyToFile(String key) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_LICENSE))) {
             writer.write(key);
