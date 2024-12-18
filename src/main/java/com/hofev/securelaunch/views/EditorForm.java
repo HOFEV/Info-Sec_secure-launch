@@ -136,7 +136,7 @@ public class EditorForm extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Выберите текстовый файл");
         // Установка фильтра для текстовых файлов
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Текстовые файлы", "txt", "text"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Текстовые файлы", "txt", "text", "sec"));
         int result = fileChooser.showOpenDialog(this);
         if(result == JFileChooser.APPROVE_OPTION){
             return fileChooser.getSelectedFile().getAbsolutePath();
