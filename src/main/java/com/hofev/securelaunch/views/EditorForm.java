@@ -1,5 +1,7 @@
 package com.hofev.securelaunch.views;
 
+import com.hofev.securelaunch.controllers.UserController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -59,29 +61,12 @@ public class EditorForm extends JFrame {
         // Добавление основной панели в окно
         add(mainPanel);
 
-        // Обработчики событий для кнопок
-        loadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String filePath = promptForFilePath();
-                if (filePath != null) {
-                    File file = new File(filePath);
-                    if (file.exists() && file.isFile() && file.canRead()) {
-                        try {
-                            String content = readFileContent(file);
-                            showText(content);
-                            currentFile = file; // Сохраняем текущий файл
-                            editButton.setEnabled(true); // Активируем кнопку редактирования
-                            saveButton.setEnabled(false); // Сохранить пока не доступно
-                            enableEditing(false); // Блокируем редактирование
-                        } catch (IOException ex) {
-                            showError("Ошибка при чтении файла: " + ex.getMessage());
-                        }
-                    } else {
-                        showError("Выбранный файл недоступен для чтения.");
-                    }
-                }
-            }
+        // Обработка событий
+
+        // Кнопка выбора файла
+        loadButton.addActionListener(e -> {
+            String filePath = promptForFilePath();
+            if (filePath != null) UserController.getInstance().startWorkWithFileObj((new File(filePath)), this);
         });
 
         editButton.addActionListener(new ActionListener() {
@@ -116,16 +101,27 @@ public class EditorForm extends JFrame {
         });
     }
 
-    /**
-     * Чтение содержимого файла.
-     *
-     * @param file Файл для чтения.
-     * @return Содержимое файла в виде строки.
-     * @throws IOException Если происходит ошибка ввода/вывода.
-     */
-    private String readFileContent(File file) throws IOException {
-        // Используем Files.readString для удобства и надёжности
-        return Files.readString(file.toPath(), StandardCharsets.UTF_8);
+    // Активация кнопки редактирования
+    public void setEnableEditButton(boolean isActivate) {
+        this.editButton.setEnabled(isActivate);
+    }
+
+    // Активация кнопки сохранения
+    public void setEnableSaveButton(boolean isActivate) {
+        this.saveButton.setEnabled(isActivate);
+    }
+
+    // Открытие доступа к редактированию файла
+    public void enableEditing(boolean enable) {
+        textArea.setEditable(enable);
+        if (enable) {
+            textArea.requestFocus();
+        }
+    }
+
+    // Обновление файла, над которым ведется работа
+    public void updateCurrentFile(File file) {
+        this.currentFile = file;
     }
 
     /**
@@ -147,18 +143,6 @@ public class EditorForm extends JFrame {
      */
     public void showText(String text) {
         textArea.setText(text);
-    }
-
-    /**
-     * Включение или отключение возможности редактирования текстовой области.
-     *
-     * @param enable true для включения редактирования, false для отключения.
-     */
-    public void enableEditing(boolean enable) {
-        textArea.setEditable(enable);
-        if (enable) {
-            textArea.requestFocus();
-        }
     }
 
     /**

@@ -4,10 +4,12 @@ import com.hofev.securelaunch.exceptions.InvalidPasswordException;
 import com.hofev.securelaunch.exceptions.LoginBlockedException;
 import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
 import com.hofev.securelaunch.exceptions.UserNotFoundException;
+import com.hofev.securelaunch.models.FileObj;
 import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
 import com.hofev.securelaunch.repositories.UserRepository;
+import com.hofev.securelaunch.services.FileService;
 import com.hofev.securelaunch.services.UserService;
 import com.hofev.securelaunch.views.EditorForm;
 import com.hofev.securelaunch.views.LoginForm;
@@ -15,6 +17,8 @@ import com.hofev.securelaunch.views.RegistrationForm;
 import com.hofev.securelaunch.views.UserAccountForm;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 public class UserController {
     private static final UserController USER_CONTROLLER = new UserController();
@@ -97,5 +101,27 @@ public class UserController {
 
     public void startEditor() {
         EditorForm editorForm = new EditorForm();
+    }
+
+    public void startWorkWithFileObj(File file, EditorForm editorForm) {
+        try {
+            // Отображение содержимого файла на экране
+            editorForm.showText(FileService.readFileContent(file));
+
+            // Обновление текущего файла
+            editorForm.updateCurrentFile(file);
+
+            // Активируется кнопка редактирования
+            editorForm.setEnableEditButton(true);
+
+            // Кнопка сохранения пока не доступна
+            editorForm.setEnableSaveButton(false);
+
+            // Поле редактирования пока заблокировано
+            editorForm.enableEditing(false);
+
+        } catch (IOException e) {
+            editorForm.showError("Выбранный файл недоступен для чтения.");
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.hofev.securelaunch.services;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class FileService {
     private static final File FILE_LICENSE = new File("license.bin"); // Файл с активированной лицензией
@@ -18,6 +20,13 @@ public class FileService {
         }
 
         return null;
+    }
+
+    // Копирует содержимое текстового файла
+    public static String readFileContent(File file) throws IOException {
+        if (!(file.exists() && file.isFile() && file.canRead())) throw new IOException("Файл невозможно прочитать");
+        // Используем Files.readString для удобства и надёжности
+        return Files.readString(file.toPath(), StandardCharsets.UTF_8);
     }
 
     public static void putKeyToFile(String key) {
