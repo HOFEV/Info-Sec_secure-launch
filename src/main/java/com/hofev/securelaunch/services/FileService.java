@@ -3,6 +3,7 @@ package com.hofev.securelaunch.services;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class FileService {
     private static final File FILE_LICENSE = new File("license.bin"); // Файл с активированной лицензией
@@ -31,9 +32,22 @@ public class FileService {
 
     // Перезапись текста в файл
     public static void writeFileContent(File file, String content) throws IOException {
-        // Используем Files.write с опцией TRUNCATE_EXISTING для перезаписи файла
-        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
+        // Получаем имя файла
+        String fileName = file.getName();
+        // Находим индекс последней точки, чтобы отделить расширение
+        int dotIndex = fileName.lastIndexOf('.');
+        // Если расширения нет, то используем полное имя как базовое
+        String baseName = (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
+
+        // Формируем имя с новым расширением
+        File newFile = new File(file.getParent(), baseName + ".sec");
+
+        // Используем Files.write с опциями CREATE и TRUNCATE_EXISTING,
+        // чтобы при необходимости файл был создан, либо перезаписан.
+        Files.writeString(newFile.toPath(), content, StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
+
 
     public static void putKeyToFile(String key) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_LICENSE))) {
