@@ -1,5 +1,7 @@
 package com.hofev.securelaunch.services;
 
+import com.hofev.securelaunch.modules.fileHistory.FileSettings;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -32,20 +34,32 @@ public class FileService {
 
     // Перезапись текста в файл
     public static void updateFileContent(File file, String content) throws IOException {
+
+        // Используем Files.write с опциями CREATE и TRUNCATE_EXISTING,
+        // чтобы при необходимости файл был создан, либо перезаписан.
+        Files.writeString(
+                updateFileExtension(file).toPath(),
+                content,
+                StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        );
+    }
+
+    // Формирует полное имя с новым расширением
+    private static File updateFileExtension(File file) {
+
         // Получаем имя файла
         String fileName = file.getName();
+
         // Находим индекс последней точки, чтобы отделить расширение
         int dotIndex = fileName.lastIndexOf('.');
+
         // Если расширения нет, то используем полное имя как базовое
         String baseName = (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
 
         // Формируем имя с новым расширением
-        File newFile = new File(file.getParent(), baseName + ".sec");
-
-        // Используем Files.write с опциями CREATE и TRUNCATE_EXISTING,
-        // чтобы при необходимости файл был создан, либо перезаписан.
-        Files.writeString(newFile.toPath(), content, StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        return new File(file.getParent(), baseName + FileSettings.FILE_EXTENSION);
     }
 
 
