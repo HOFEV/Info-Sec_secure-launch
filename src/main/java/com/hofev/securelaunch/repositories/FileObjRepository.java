@@ -1,6 +1,7 @@
 package com.hofev.securelaunch.repositories;
 
 import com.hofev.securelaunch.exceptions.FileObjAlreadyExistException;
+import com.hofev.securelaunch.exceptions.FileObjNotFoundException;
 import com.hofev.securelaunch.models.FileObj;
 import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.services.FileService;
@@ -47,13 +48,9 @@ public class FileObjRepository {
     }
 
     // Ищет файл в истории файлов
-    public FileObj getFileObjByName(String fileObjName) {
-        return FILE_OBJ_LIST.getOrDefault(fileObjName, null);
-    }
-
-    // Проверяет существование такого файла в истории
-    public boolean checkFileObj(File file) {
-        return FILE_OBJ_LIST.containsKey(file.getName());
+    public FileObj getFileObjByName(String fileObjName) throws FileObjNotFoundException {
+        if (FILE_OBJ_LIST.containsKey(fileObjName)) return FILE_OBJ_LIST.get(fileObjName);
+        else throw new FileObjNotFoundException("История о файле не найдена!");
     }
 
     // Сохраняет список файлов в файл
