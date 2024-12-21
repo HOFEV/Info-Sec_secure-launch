@@ -8,10 +8,15 @@ import java.util.Map;
 
 public class FileObjRepository {
     private static final String nameOfFileHistory = "fileHistory.ser";
+    private static final FileObjRepository FILE_OBJ_REPOSITORY = new FileObjRepository();
     private Map<String, FileObj> FILE_OBJ_LIST;
 
-    public FileObjRepository() {
-        loadFileObjMap();
+    private FileObjRepository() {
+        loadFileObjFromFile();
+    }
+
+    public static FileObjRepository getInstance() {
+        return FILE_OBJ_REPOSITORY;
     }
 
     // Добавление файла в историю файлов
@@ -25,6 +30,11 @@ public class FileObjRepository {
         return FILE_OBJ_LIST.getOrDefault(fileObjName, null);
     }
 
+    // Проверяет существование такого файла в истории
+    public boolean checkFileObj(File file) {
+        return FILE_OBJ_LIST.containsKey(file.getName());
+    }
+
     // Сохраняет список файлов в файл
     private void saveFileHistoryMap() {
          // Сериализация истории файлов
@@ -35,31 +45,21 @@ public class FileObjRepository {
         }
     }
 
-    // Выгружает список файлов обратно в файл
-    public void updateFileObjOnFile() {
-        saveFileHistoryMap();
-    }
-
-    // Обновляет список файлов
-    private void loadFileObjMap() {
-        this.FILE_OBJ_LIST = loadFileObjFromFile();
-    }
-
-    // Загружает список файлов
-    private Map<String, FileObj> loadFileObjFromFile() {
+    // Загружает список файлов из файла
+    private void loadFileObjFromFile() {
         // Де сериализация истории файлов
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nameOfFileHistory))) {
 
             Object obj = ois.readObject();
 
             if (obj instanceof Map) {
-                return (Map<String, FileObj>) obj;
+                this.FILE_OBJ_LIST = (Map<String, FileObj>) obj;
             } else {
                 throw new IllegalArgumentException("Ошибка загрузки истории файлов");
             }
 
         } catch (IOException | ClassNotFoundException _) {
-            return new HashMap<>();
+            this.FILE_OBJ_LIST = new HashMap<>();
         }
     }
 }
