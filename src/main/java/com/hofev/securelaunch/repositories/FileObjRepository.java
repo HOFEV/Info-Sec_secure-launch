@@ -1,6 +1,5 @@
 package com.hofev.securelaunch.repositories;
 
-import com.hofev.securelaunch.exceptions.FileObjNotFoundException;
 import com.hofev.securelaunch.models.FileObj;
 
 import java.io.*;
@@ -22,9 +21,8 @@ public class FileObjRepository {
     }
 
     // Ищёт файл в истории файлов
-    public FileObj getFileObjByName(String fileObjName) throws FileObjNotFoundException {
-        if (FILE_OBJ_LIST.containsKey(fileObjName)) return FILE_OBJ_LIST.get(fileObjName);
-        else throw new FileObjNotFoundException("Файла не существует!");
+    public FileObj getFileObjByName(String fileObjName) {
+        return FILE_OBJ_LIST.getOrDefault(fileObjName, null);
     }
 
     // Сохраняет список файлов в файл
