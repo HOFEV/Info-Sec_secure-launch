@@ -1,6 +1,5 @@
 package com.hofev.securelaunch.models;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class FileObj implements Serializable {
