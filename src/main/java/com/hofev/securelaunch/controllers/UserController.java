@@ -1,11 +1,8 @@
 package com.hofev.securelaunch.controllers;
 
-import com.hofev.securelaunch.exceptions.InvalidPasswordException;
-import com.hofev.securelaunch.exceptions.LoginBlockedException;
-import com.hofev.securelaunch.exceptions.UserAlreadyExistException;
-import com.hofev.securelaunch.exceptions.UserNotFoundException;
-import com.hofev.securelaunch.models.FileObj;
+import com.hofev.securelaunch.exceptions.*;
 import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
+import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
 import com.hofev.securelaunch.repositories.UserRepository;
@@ -103,25 +100,77 @@ public class UserController {
         EditorForm editorForm = new EditorForm();
     }
 
-    public void startWorkWithFileObj(File file, EditorForm editorForm) {
+    // Открытие и подготовка файла к редактированию
+    public void openFileObj(File file, EditorForm editorForm) {
+
         try {
-            // Отображение содержимого файла на экране
+            // Проверяем совпадение хэш - содержимого файла
+            if (!FileHistoryService.isFileValid(file)) {
+                editorForm.showError("Данный файл был изменен вне программы, доступ запрещен!");
+                return;
+            }
+
+            // Вывод на экран содержимое файла
             editorForm.showText(FileService.readFileContent(file));
 
-            // Обновление текущего файла
-            editorForm.updateCurrentFile(file);
-
-            // Активируется кнопка редактирования
-            editorForm.setEnableEditButton(true);
-
-            // Кнопка сохранения пока не доступна
-            editorForm.setEnableSaveButton(false);
-
-            // Поле редактирования пока заблокировано
-            editorForm.enableEditing(false);
-
         } catch (IOException e) {
-            editorForm.showError("Выбранный файл недоступен для чтения.");
+            editorForm.showError("Выбранный файл недоступен для чтения! " + e.getMessage());
         }
+
+        // Обновление текущего файла
+        editorForm.updateCurrentFile(file);
+
+        // Активируется кнопка редактирования
+        editorForm.setEnableEditButton(true);
+
+        // Кнопка сохранения пока не доступна
+        editorForm.setEnableSaveButton(false);
+
+        // Поле редактирования пока заблокировано
+        editorForm.enableEditing(false);
+    }
+
+    // Редактирование файла
+    public void editFileObj(EditorForm editorForm) {
+
+        // Открытие доступа к изменению текста
+        editorForm.enableEditing(true);
+
+        // Активируется кнопка сохранения документа
+        editorForm.setEnableSaveButton(true);
+
+        // Деактивируется кнопка редактирования
+        editorForm.setEnableEditButton(false);
+    }
+
+    // Сохранение изменений в файле
+    public void saveFileObj(File currentFile, EditorForm editorForm) {
+
+        // Получение обновленного текста
+        String updatedText = editorForm.getText();
+
+        // Блокирует поле для изменения текста
+        editorForm.enableEditing(false);
+
+        // Выключает кнопку сохранения
+        editorForm.setEnableSaveButton(false);
+
+        // Перезапись текста в файл
+        try {
+            // Если у файла старое расширение - обновляем
+            if (!FileService.checkValidFileExtension(currentFile)) currentFile = FileService.updateFileExtension(currentFile);
+
+            // Перезапись текста в файл
+            FileService.updateFileContent(currentFile, updatedText);
+
+            // Обновление хэш содержимого файла
+            FileHistoryService.updateHashFileContent(currentFile, updatedText);
+
+        } catch (IOException ioe) {
+            editorForm.showError("Ошибка сохранения файла! " + ioe.getMessage());
+        }
+
+        // Очищает поле текста
+        editorForm.showText("");
     }
 }

@@ -63,41 +63,26 @@ public class EditorForm extends JFrame {
 
         // Обработка событий
 
-        // Кнопка выбора файла
+        // Действие выбора файла
         loadButton.addActionListener(e -> {
             String filePath = promptForFilePath();
-            if (filePath != null) UserController.getInstance().startWorkWithFileObj((new File(filePath)), this);
+            if (filePath != null) UserController.getInstance().openFileObj((new File(filePath)), this);
         });
 
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentFile != null) {
-                    enableEditing(true);
-                    saveButton.setEnabled(true); // Разрешаем сохранение
-                } else {
-                    showError("Нет загруженного файла для редактирования.");
-                }
-            }
+        // Действие редактирования файла
+        editButton.addActionListener(e -> {
+            if (currentFile == null) showError("Нет загруженного файла для редактирования.");
+            UserController.getInstance().editFileObj(this);
         });
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (currentFile != null) {
-                    String updatedText = getText();
-                    try {
-                        writeFileContent(currentFile, updatedText);
-                        enableEditing(false);
-                        saveButton.setEnabled(false);
-                        JOptionPane.showMessageDialog(EditorForm.this, "Файл успешно сохранён.", "Успех", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException ex) {
-                        showError("Ошибка при сохранении файла: " + ex.getMessage());
-                    }
-                } else {
-                    showError("Нет загруженного файла для сохранения.");
-                }
+        // Действие сохрание файла
+        saveButton.addActionListener(e -> {
+            if (currentFile == null) {
+                showError("Нет загруженного файла для сохранения.");
+                return;
             }
+
+            UserController.getInstance().saveFileObj(currentFile, this);
         });
     }
 
@@ -122,18 +107,6 @@ public class EditorForm extends JFrame {
     // Обновление файла, над которым ведется работа
     public void updateCurrentFile(File file) {
         this.currentFile = file;
-    }
-
-    /**
-     * Запись содержимого в файл.
-     *
-     * @param file    Файл для записи.
-     * @param content Содержимое для записи.
-     * @throws IOException Если происходит ошибка ввода/вывода.
-     */
-    private void writeFileContent(File file, String content) throws IOException {
-        // Используем Files.write с опцией TRUNCATE_EXISTING для перезаписи файла
-        Files.writeString(file.toPath(), content, StandardCharsets.UTF_8, java.nio.file.StandardOpenOption.TRUNCATE_EXISTING);
     }
 
     /**
@@ -163,7 +136,7 @@ public class EditorForm extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Выберите текстовый файл");
         // Установка фильтра для текстовых файлов
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Текстовые файлы", "txt", "text"));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Текстовые файлы", "txt", "text", "sec"));
         int result = fileChooser.showOpenDialog(this);
         if(result == JFileChooser.APPROVE_OPTION){
             return fileChooser.getSelectedFile().getAbsolutePath();
