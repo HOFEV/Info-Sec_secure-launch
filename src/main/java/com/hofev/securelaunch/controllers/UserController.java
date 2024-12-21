@@ -156,7 +156,7 @@ public class UserController {
         editorForm.setEnableEditButton(false);
     }
 
-    // Сохранение измений в файле
+    // Сохранение изменений в файле
     public void saveFileObj(File currentFile, EditorForm editorForm) {
 
         // Получение обновленного текста
