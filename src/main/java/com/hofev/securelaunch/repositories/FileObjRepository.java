@@ -1,5 +1,6 @@
 package com.hofev.securelaunch.repositories;
 
+import com.hofev.securelaunch.exceptions.FileObjAlreadyExistException;
 import com.hofev.securelaunch.models.FileObj;
 import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.services.FileService;
@@ -23,20 +24,29 @@ public class FileObjRepository {
 
     // Создание нового объекта для хранения данных о файле
     public void createFileObj(File file) throws IOException {
+
+        // Создание истории о файле
         FileObj fileObj = new FileObj(
                 FileHistoryService.getHashOfContentFile(FileService.readFileContent(file)),
                 file.getName()
         );
-        uploadFileObj(fileObj);
+
+        // Загрузка файла в историю
+        try {
+            uploadFileObj(fileObj);
+        } catch (FileObjAlreadyExistException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // Добавление файла в историю файлов
-    public void uploadFileObj(FileObj fileObj) {
+    public void uploadFileObj(FileObj fileObj) throws FileObjAlreadyExistException {
+        if (FILE_OBJ_LIST.containsKey(fileObj.getFileName())) throw new FileObjAlreadyExistException("Файл уже существует!");
         FILE_OBJ_LIST.put(fileObj.getFileName(), fileObj);
         saveFileHistoryMap();
     }
 
-    // Ищёт файл в истории файлов
+    // Ищет файл в истории файлов
     public FileObj getFileObjByName(String fileObjName) {
         return FILE_OBJ_LIST.getOrDefault(fileObjName, null);
     }
