@@ -38,7 +38,7 @@ public class FileService {
         // Используем Files.write с опциями CREATE и TRUNCATE_EXISTING,
         // чтобы при необходимости файл был создан, либо перезаписан.
         Files.writeString(
-                updateFileExtension(file).toPath(),
+                file.toPath(),
                 content,
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
@@ -46,8 +46,8 @@ public class FileService {
         );
     }
 
-    // Формирует полное имя с новым расширением
-    private static File updateFileExtension(File file) {
+    // Изменяет расширение файла на указанное в настройках файла FileSettings и возвращает File
+    public static File updateFileExtension(File file) throws IOException {
 
         // Получаем имя файла
         String fileName = file.getName();
@@ -59,7 +59,46 @@ public class FileService {
         String baseName = (dotIndex == -1) ? fileName : fileName.substring(0, dotIndex);
 
         // Формируем имя с новым расширением
-        return new File(file.getParent(), baseName + FileSettings.FILE_EXTENSION);
+        File newFile = new File(file.getParent(), baseName + FileSettings.FILE_EXTENSION);
+
+        // Копирует содержимое старого файла и вставляет в новый файл с новым расширением
+        updateFileContent(newFile, readFileContent(file));
+
+        // Удаляет файл со старым расширением
+        if (!file.delete()) {
+            System.out.println("Ошибка при удалении старого файла");
+        }
+
+        return newFile;
+    }
+
+    // Проверка на совпадение расширения с настройками файла
+    public static boolean checkValidFileExtension (File file) {
+
+        // Получаем текущее расширение файла
+        String fileExtension = getFileExtension(file);
+
+        // Если нет у файла расширения
+        if (fileExtension == null) return false;
+
+        return fileExtension.equals(FileSettings.FILE_EXTENSION);
+    }
+
+    // Возвращает расширение файла
+    private static String getFileExtension(File file) {
+        if (file == null || !file.exists()) return null;
+
+        String fileName = file.getName();
+
+        // Находим индекс последней точки, чтобы отделить расширение
+        int dotIndex = fileName.lastIndexOf('.');
+
+        // Если точка найдена и она не в начале или конце имени файла
+        if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex + 1); // Возвращаем часть после последней точки
+        }
+
+        return null;
     }
 
 
