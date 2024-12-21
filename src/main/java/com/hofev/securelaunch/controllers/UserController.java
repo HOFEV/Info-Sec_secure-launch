@@ -5,7 +5,6 @@ import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
-import com.hofev.securelaunch.repositories.FileObjRepository;
 import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.services.FileService;
 import com.hofev.securelaunch.services.UserService;
@@ -103,31 +102,19 @@ public class UserController {
 
     // Открытие и подготовка файла к редактированию
     public void openFileObj(File file, EditorForm editorForm) {
-        //Проверка файла в базе на совпадение хэша
+
         try {
-            if (!FileHistoryService.CheckMatchOfHashFileContent(file)) {
+            // Проверяем совпадение хэш - содержимого файла
+            if (!FileHistoryService.isFileValid(file)) {
                 editorForm.showError("Данный файл был изменен вне программы, доступ запрещен!");
                 return;
             }
-        } catch (FileObjNotFoundException e) {
-            try {
-                (new FileObjRepository()).uploadFileObj(FileHistoryService.createFileObj(file));
-                System.out.println("Файл добавлен");
-            } catch (IOException ex) {
-                editorForm.showError("Выбранный файл недоступен для чтения.");
-                return;
-            }
-        } catch (IOException e) {
-            editorForm.showError("Выбранный файл недоступен для чтения.");
-            return;
-        }
 
-        // Отображение содержимого файла на экране
-        try {
+            // Вывод на экран содержимое файла
             editorForm.showText(FileService.readFileContent(file));
+
         } catch (IOException e) {
-            editorForm.showError("Выбранный файл недоступен для чтения.");
-            return;
+            editorForm.showError("Выбранный файл недоступен для чтения! " + e.getMessage());
         }
 
         // Обновление текущего файла
@@ -170,16 +157,17 @@ public class UserController {
 
         // Перезапись текста в файл
         try {
+            // Если у файла старое расширение - обновляем
+            if (!FileService.checkValidFileExtension(currentFile)) currentFile = FileService.updateFileExtension(currentFile);
+
             // Перезапись текста в файл
             FileService.updateFileContent(currentFile, updatedText);
 
             // Обновление хэш содержимого файла
             FileHistoryService.updateHashFileContent(currentFile, updatedText);
 
-        } catch (IOException e) {
-            editorForm.showError("Ошибка при сохранении файла!" + e.getMessage());
-        } catch (FileObjNotFoundException e) {
-            editorForm.showError("Выбранный файл не существует!" + e.getMessage());
+        } catch (IOException ioe) {
+            editorForm.showError("Ошибка сохранения файла! " + ioe.getMessage());
         }
 
         // Очищает поле текста
