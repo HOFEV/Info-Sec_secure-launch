@@ -171,7 +171,7 @@ public class UserController {
         // Перезапись текста в файл
         try {
             // Перезапись текста в файл
-            FileService.writeFileContent(currentFile, updatedText);
+            FileService.updateFileContent(currentFile, updatedText);
 
             // Обновление хэш содержимого файла
             FileHistoryService.updateHashFileContent(currentFile, updatedText);

@@ -31,7 +31,7 @@ public class FileService {
     }
 
     // Перезапись текста в файл
-    public static void writeFileContent(File file, String content) throws IOException {
+    public static void updateFileContent(File file, String content) throws IOException {
         // Получаем имя файла
         String fileName = file.getName();
         // Находим индекс последней точки, чтобы отделить расширение
