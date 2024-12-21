@@ -1,6 +1,8 @@
 package com.hofev.securelaunch.repositories;
 
 import com.hofev.securelaunch.models.FileObj;
+import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
+import com.hofev.securelaunch.services.FileService;
 
 import java.io.*;
 import java.util.HashMap;
@@ -17,6 +19,15 @@ public class FileObjRepository {
 
     public static FileObjRepository getInstance() {
         return FILE_OBJ_REPOSITORY;
+    }
+
+    // Создание нового объекта для хранения данных о файле
+    public void createFileObj(File file) throws IOException {
+        FileObj fileObj = new FileObj(
+                FileHistoryService.getHashOfContentFile(FileService.readFileContent(file)),
+                file.getName()
+        );
+        uploadFileObj(fileObj);
     }
 
     // Добавление файла в историю файлов
