@@ -1,6 +1,6 @@
 package com.hofev.securelaunch.modules.fileHistory;
 
-import com.hofev.securelaunch.exceptions.FileObjNotFoundException;
+import com.hofev.securelaunch.models.FileObj;
 import com.hofev.securelaunch.repositories.FileObjRepository;
 import com.hofev.securelaunch.services.FileService;
 import com.hofev.securelaunch.utils.HashingUtil;
@@ -14,32 +14,44 @@ public class FileHistoryService {
 
     // Обновление хэш содержимого файла
     public static void updateHashFileContent(File file, String content) {
-        // Изменение хэш содержимого файла в истории файлов
-        try {
-            FileObjRepository.getInstance().getFileObjByName(file.getName()).setHashData(getHashOfContentFile(content));
-        } catch (FileObjNotFoundException e) {
+
+        // Работа с файловым репозиторием
+        FileObjRepository fileObjRepository = FileObjRepository.getInstance();
+
+        // Получение истории о файле
+        FileObj fileObj = fileObjRepository.reloadList().getFileObjByName(file.getName());
+
+        // Изменение хэш - содержимого файла
+        if (fileObj != null) {
+            fileObj.setHashData(getHashOfContentFile(content));
+
+            // Обновление базы файлов
+            fileObjRepository.uploadFileObjList();
+
+        } else {
+            // Добавление файла в базу файлов
             try {
-                FileObjRepository.getInstance().createFileObj(file);
-            } catch (IOException _) {}
+                fileObjRepository.addFileObj(file);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
     public static boolean isFileValid(File file) throws IOException {
-        try {
-            // Проверяется совместимость хэша
-            return checkMatchOfHashFileContent(file);
-        } catch (FileObjNotFoundException e) {
-            return true;
-        }
-    }
 
-    // Проверка на совпадение хэша содержимого
-    private static boolean checkMatchOfHashFileContent(File file) throws IOException, FileObjNotFoundException {
+        // Получение истории файла
+        FileObj fileObj = FileObjRepository.getInstance().reloadList().getFileObjByName(file.getName());
+
+        // Если ее нет в базе
+        if (fileObj == null) return true;
+
         // Получение хэш содержимого файла из базы
-        String hashFromFileData = null;
-        hashFromFileData = FileObjRepository.getInstance().getFileObjByName(file.getName()).getHashData();
+        String hashFromFileData = fileObj.getHashData();
+
         // Получение хэш содержимого текущего файла
         String hashFromFile = getHashOfContentFile(FileService.readFileContent(file));
+
         return hashFromFile.equals(hashFromFileData);
     }
 
