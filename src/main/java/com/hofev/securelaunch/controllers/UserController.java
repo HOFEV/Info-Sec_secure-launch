@@ -109,6 +109,7 @@ public class UserController {
             FileObjRepository.loadFileObjRepository();
         } catch (BrokenFileHistoryException e) {
             editorForm.showError("Заблокирован доступ: " + e.getMessage());
+            return;
         }
 
         try {
