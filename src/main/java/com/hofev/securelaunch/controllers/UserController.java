@@ -5,6 +5,7 @@ import com.hofev.securelaunch.modules.blockingUsers.LoginAttemptService;
 import com.hofev.securelaunch.modules.fileHistory.FileHistoryService;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevel;
 import com.hofev.securelaunch.modules.userAccessLevel.AccessLevelService;
+import com.hofev.securelaunch.repositories.FileObjRepository;
 import com.hofev.securelaunch.repositories.UserRepository;
 import com.hofev.securelaunch.services.FileService;
 import com.hofev.securelaunch.services.UserService;
@@ -103,6 +104,13 @@ public class UserController {
     // Открытие и подготовка файла к редактированию
     public void openFileObj(File file, EditorForm editorForm) {
 
+        // Загрузка репозитории файлов
+        try {
+            FileObjRepository.loadFileObjRepository();
+        } catch (BrokenFileHistoryException e) {
+            editorForm.showError("Заблокирован доступ: " + e.getMessage());
+        }
+
         try {
             // Проверяем совпадение хэш - содержимого файла
             if (!FileHistoryService.isFileValid(file)) {
@@ -144,31 +152,31 @@ public class UserController {
     }
 
     // Сохранение изменений в файле
-    public void saveFileObj(File currentFile, EditorForm editorForm) {
+    public void saveFileObj(File file, EditorForm editorForm) {
 
         // Получение обновленного текста
         String updatedText = editorForm.getText();
+
+        // Перезапись текста в файл
+        try {
+            // Если у файла старое расширение - обновляем
+            if (!FileService.checkValidFileExtension(file)) file = FileService.updateFileExtension(file);
+
+            // Перезапись текста в файл
+            FileService.updateFileContent(file, updatedText);
+
+            // Обновление хэш содержимого файла
+            FileHistoryService.updateHashFileContent(file, updatedText);
+
+        } catch (IOException ioe) {
+            editorForm.showError("Ошибка сохранения файла! " + ioe.getMessage());
+        }
 
         // Блокирует поле для изменения текста
         editorForm.enableEditing(false);
 
         // Выключает кнопку сохранения
         editorForm.setEnableSaveButton(false);
-
-        // Перезапись текста в файл
-        try {
-            // Если у файла старое расширение - обновляем
-            if (!FileService.checkValidFileExtension(currentFile)) currentFile = FileService.updateFileExtension(currentFile);
-
-            // Перезапись текста в файл
-            FileService.updateFileContent(currentFile, updatedText);
-
-            // Обновление хэш содержимого файла
-            FileHistoryService.updateHashFileContent(currentFile, updatedText);
-
-        } catch (IOException ioe) {
-            editorForm.showError("Ошибка сохранения файла! " + ioe.getMessage());
-        }
 
         // Очищает поле текста
         editorForm.showText("");
